@@ -4,6 +4,9 @@ public class Edge < NodeLabelType > {
 
     private Vertex < NodeLabelType, Edge < NodeLabelType > > edgeEnd;
 
+    public Edge ( ) {
+    }
+
     public Edge ( Vertex < NodeLabelType, Edge < NodeLabelType > > edgeEnd ) {
         this.edgeEnd = edgeEnd;
     }
@@ -18,9 +21,9 @@ public class Edge < NodeLabelType > {
 
     @Override
     public String toString() {
-        return "Edge{" +
-                "edgeEnd=" + edgeEnd.getLabel() +
-                '}';
+        return "Edge { " +
+                "edgeEnd=" + (edgeEnd == null ? "" : edgeEnd.getLabel()) +
+                " }";
     }
 
     @Override

@@ -39,7 +39,7 @@ public class Vertex <
 
     @Override
     public String toString ( ) {
-        StringBuilder stringBuilder = new StringBuilder("Node { label=" + label + " ");
+        StringBuilder stringBuilder = new StringBuilder("Node { label=" + label);
 
         if ( ! this.edgeList.isEmpty()) {
             stringBuilder.append(", neighbours={");
@@ -47,6 +47,8 @@ public class Vertex <
                 stringBuilder.append(this.edgeList.get(index)).append(", ");
             }
             stringBuilder.append(this.edgeList.get(this.edgeList.size() - 1)).append("} ");
+        } else {
+            stringBuilder.append(" ");
         }
 
         stringBuilder.append("}");

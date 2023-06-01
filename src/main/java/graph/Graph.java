@@ -27,7 +27,7 @@ public abstract class Graph <
         this.vertexList = new ArrayList<>();
         for ( int index = 0; index < nodeCount; ++ index ) {
             NodeLabelType nodeLabel = nodeLabelGenerator.apply(index);
-            this.vertexList.add( new Vertex < NodeLabelType, EdgeType > ( nodeLabel ) );
+            this.vertexList.add( new Vertex<>( nodeLabel ) );
         }
     }
 
@@ -41,13 +41,11 @@ public abstract class Graph <
             Supplier < EdgeType > edgeSupplier
     );
 
-    public abstract void addEdge ( EdgeType edge );
-
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("Graph {\n");
         for ( Vertex < NodeLabelType, EdgeType > vertex : this.vertexList ) {
-            stringBuilder.append(vertex).append('\n');
+            stringBuilder.append('\t').append(vertex).append('\n');
         }
         stringBuilder.append('}');
         return stringBuilder.toString();

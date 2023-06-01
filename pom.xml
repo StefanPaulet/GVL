@@ -34,7 +34,7 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>org.openjfx.App</mainClass>
+                            <mainClass>openjfx.App</mainClass>
                         </configuration>
                     </execution>
                 </executions>
