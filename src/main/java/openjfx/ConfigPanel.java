@@ -73,6 +73,9 @@ public class ConfigPanel extends GridPane {
         UnaryOperator<TextFormatter.Change> integerFilter = change -> {
             String input = change.getControlNewText();
             if ( input.matches("^[1-9]\\d*$|")) {
+                if ( ! input.equals( "" ) && Integer.parseInt( input ) > 25 ) {
+                    return null;
+                }
                 return change;
             }
             return null;

@@ -1,2 +1,31 @@
-package graph;public class UndirectedEdgeAdder {
+package graph;
+
+import java.util.List;
+import java.util.function.Supplier;
+
+public interface UndirectedEdgeAdder < VertexLabelType, EdgeType extends Edge < VertexLabelType > >
+    extends EdgeAdder < VertexLabelType, EdgeType > {
+
+    @Override
+    default void addEdgeNoexcept(
+            List < Vertex < VertexLabelType, EdgeType > > vertexList,
+            Vertex < VertexLabelType, EdgeType > firstEnd,
+            Vertex < VertexLabelType, EdgeType > secondEnd,
+            Supplier < EdgeType > edgeSupplier
+    ) throws AlreadyExistingEdgeException {
+
+        EdgeType newFirstEndEdge = edgeSupplier.get();
+        newFirstEndEdge.setEdgeEnd( ( Vertex < VertexLabelType, Edge< VertexLabelType > > ) secondEnd );
+        if ( firstEnd.getEdgeList().contains(newFirstEndEdge) ) {
+            throw new AlreadyExistingEdgeException(firstEnd, secondEnd);
+        }
+        firstEnd.getEdgeList().add(newFirstEndEdge);
+
+        EdgeType newSecondEndEdge = edgeSupplier.get();
+        newSecondEndEdge.setEdgeEnd( ( Vertex < VertexLabelType, Edge< VertexLabelType > > ) firstEnd );
+        if ( secondEnd.getEdgeList().contains(newSecondEndEdge) ) {
+            throw new AlreadyExistingEdgeException(secondEnd, firstEnd);
+        }
+        secondEnd.getEdgeList().add(newSecondEndEdge);
+    }
 }

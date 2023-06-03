@@ -4,26 +4,32 @@ import graph.Edge;
 import graph.Graph;
 import openjfx.DrawingPanel;
 
-import static openjfx.DrawingPanel.CANVAS_HEIGHT;
-import static openjfx.DrawingPanel.CANVAS_WIDTH;
+public interface GraphDrawer < VertexLabelType, EdgeType extends Edge < VertexLabelType > >
+    extends EdgeDrawer < VertexLabelType, EdgeType > ,
+    VerticesDrawer < VertexLabelType, EdgeType > {
 
-public interface GraphDrawer <
-        NodeLabelType,
-        EdgeType extends Edge< NodeLabelType >
-> {
-    double MAIN_CIRCLE_X = CANVAS_WIDTH / 2;
-    double MAIN_CIRCLE_Y = CANVAS_HEIGHT / 2 - 25.0;
-    double NODE_RADIUS = 15.0;
-    double MAIN_CIRCLE_RADIUS = 200.0;
+    default void draw (
+        Graph < VertexLabelType, EdgeType > graph,
+        DrawingPanel drawingPanel
+    ) {
+        var nodeList = graph.getConstVertexList();
+        this.drawVertices ( graph, drawingPanel );
+        for ( var node : nodeList ) {
+            Point firstPoint = new Point ( ( double ) nodeList.indexOf( node ) / ( double ) nodeList.size(), MAIN_CIRCLE_RADIUS );
 
-    void draw ( Graph < NodeLabelType, EdgeType > graph, DrawingPanel drawingPanel );
-}
+            firstPoint.x += NODE_RADIUS;
+            firstPoint.y += NODE_RADIUS;
 
-class Point {
-    double x;
-    double y;
-    public Point(double coefficient) {
-        this.x = GraphDrawer.MAIN_CIRCLE_X + GraphDrawer.MAIN_CIRCLE_RADIUS * Math.cos( 2 * Math.PI * coefficient);
-        this.y = GraphDrawer.MAIN_CIRCLE_Y + GraphDrawer.MAIN_CIRCLE_RADIUS * Math.sin( 2 * Math.PI * coefficient);
+            for ( var edge : node.getEdgeList() ) {
+                var adjacentNode = edge.getEdgeEnd();
+                Point secondPoint = new Point ( ( double ) nodeList.indexOf( adjacentNode ) / ( double ) nodeList.size(), MAIN_CIRCLE_RADIUS );
+
+                secondPoint.x += NODE_RADIUS;
+                secondPoint.y += NODE_RADIUS;
+
+                this.drawEdge( firstPoint, secondPoint, drawingPanel );
+
+            }
+        }
     }
 }

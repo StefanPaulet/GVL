@@ -1,21 +1,21 @@
 package graph;
 
-public class Edge < NodeLabelType > {
+public class Edge < VertexLabelType > {
 
-    private Vertex < NodeLabelType, Edge < NodeLabelType > > edgeEnd;
+    private Vertex < VertexLabelType, Edge < VertexLabelType > > edgeEnd;
 
     public Edge ( ) {
     }
 
-    public Edge ( Vertex < NodeLabelType, Edge < NodeLabelType > > edgeEnd ) {
+    public Edge ( Vertex < VertexLabelType, Edge < VertexLabelType > > edgeEnd ) {
         this.edgeEnd = edgeEnd;
     }
 
-    public Vertex < NodeLabelType, Edge < NodeLabelType > > getEdgeEnd () {
+    public Vertex < VertexLabelType, Edge < VertexLabelType > > getEdgeEnd () {
         return edgeEnd;
     }
 
-    public void setEdgeEnd ( Vertex < NodeLabelType, Edge < NodeLabelType > > edgeEnd ) {
+    public void setEdgeEnd ( Vertex < VertexLabelType, Edge < VertexLabelType > > edgeEnd ) {
         this.edgeEnd = edgeEnd;
     }
 

@@ -1,0 +1,30 @@
+package graph;
+
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+public class UndirectedBipartiteGraph < VertexLabelType, EdgeType extends Edge < VertexLabelType > >
+	extends BipartiteGraph < VertexLabelType, EdgeType >
+	implements UndirectedEdgeAdder < VertexLabelType, EdgeType > {
+
+	public UndirectedBipartiteGraph ( List < Vertex < VertexLabelType, EdgeType > > vertices ) throws NonBipartiteGraphException {
+		super( vertices );
+	}
+
+	public UndirectedBipartiteGraph ( int nodeCount, Function < Integer, VertexLabelType > nodeLabelGenerator ) {
+		super( nodeCount, nodeLabelGenerator );
+	}
+
+	@Override
+	public void addEdge (
+		List < Vertex < VertexLabelType, EdgeType > > vertices,
+		Vertex < VertexLabelType, EdgeType > firstEnd,
+		Vertex < VertexLabelType, EdgeType > secondEnd,
+		Supplier < EdgeType > edgeSupplier
+	) throws NonExistingVertexException, LoopEdgeException, AlreadyExistingEdgeException, BipartiteEdgeAdditionException {
+		super.checkEdgeConstraint ( this.vertexList, firstEnd, secondEnd );
+		this.checkBipartitionOnEdgeAddition ( firstEnd, secondEnd );
+		UndirectedEdgeAdder.super.addEdgeNoexcept ( vertices, firstEnd, secondEnd, edgeSupplier );
+	}
+}

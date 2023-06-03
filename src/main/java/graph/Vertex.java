@@ -42,11 +42,11 @@ public class Vertex <
         StringBuilder stringBuilder = new StringBuilder("Node { label=" + label);
 
         if ( ! this.edgeList.isEmpty()) {
-            stringBuilder.append(", neighbours={");
+            stringBuilder.append(", neighbours={ ");
             for (int index = 0; index < this.edgeList.size() - 1; ++index) {
                 stringBuilder.append(this.edgeList.get(index)).append(", ");
             }
-            stringBuilder.append(this.edgeList.get(this.edgeList.size() - 1)).append("} ");
+            stringBuilder.append(this.edgeList.get(this.edgeList.size() - 1)).append(" } ");
         } else {
             stringBuilder.append(" ");
         }
