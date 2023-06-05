@@ -2,7 +2,11 @@ package openjfx.graphDrawer;
 
 import graph.Edge;
 import graph.Graph;
+import graph.Vertex;
+import javafx.scene.canvas.GraphicsContext;
 import openjfx.DrawingPanel;
+
+import java.util.Map;
 
 import static openjfx.DrawingPanel.CANVAS_HEIGHT;
 import static openjfx.DrawingPanel.CANVAS_WIDTH;
@@ -12,15 +16,30 @@ public interface VerticesDrawer < VertexLabelType, EdgeType extends Edge < Verte
     double MAIN_CIRCLE_Y = CANVAS_HEIGHT / 2 - 25.0;
     double NODE_DIAMETER = 15.0;
     double NODE_RADIUS = NODE_DIAMETER / 2;
-    double MAIN_CIRCLE_RADIUS = 200.0;
-    double LABEL_CIRCLE_RADIUS = 220.0;
 
-    void drawVertices ( Graph < VertexLabelType, EdgeType > graph, DrawingPanel drawingPanel );
+    default void drawVertices ( Point[] points, DrawingPanel drawingPanel ) {
+        GraphicsContext graphicsContext = drawingPanel.getGraphicsContext2D();
+        for ( Point point : points ) {
+            graphicsContext.fillOval(
+                point.x,
+                point.y,
+                NODE_DIAMETER,
+                NODE_DIAMETER
+            );
+        }
+    };
+
+    Map < Vertex < VertexLabelType, EdgeType >, Point > computeGraphPoints ( Graph < VertexLabelType, EdgeType > graph );
 }
 
 class Point {
     double x;
     double y;
+
+    public Point ( Point other ) {
+        this.x = other.x;
+        this.y = other.y;
+    }
 
     public Point (
         boolean ignored,

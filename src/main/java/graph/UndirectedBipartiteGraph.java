@@ -18,13 +18,12 @@ public class UndirectedBipartiteGraph < VertexLabelType, EdgeType extends Edge <
 
 	@Override
 	public void addEdge (
-		List < Vertex < VertexLabelType, EdgeType > > vertices,
 		Vertex < VertexLabelType, EdgeType > firstEnd,
 		Vertex < VertexLabelType, EdgeType > secondEnd,
 		Supplier < EdgeType > edgeSupplier
 	) throws NonExistingVertexException, LoopEdgeException, AlreadyExistingEdgeException, BipartiteEdgeAdditionException {
-		super.checkEdgeConstraint ( this.vertexList, firstEnd, secondEnd );
+		super.checkEdgeConstraint ( firstEnd, secondEnd );
 		this.checkBipartitionOnEdgeAddition ( firstEnd, secondEnd );
-		UndirectedEdgeAdder.super.addEdgeNoexcept ( vertices, firstEnd, secondEnd, edgeSupplier );
+		UndirectedEdgeAdder.super.addEdgeNoexcept ( firstEnd, secondEnd, edgeSupplier );
 	}
 }

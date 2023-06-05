@@ -44,7 +44,6 @@ public interface DirectedEdgeDrawer < VertexLabelType, EdgeType extends Edge< Ve
 			secondEnd.y + NODE_RADIUS * Math.sin ( angle ) * yDirection
 		);
 
-		graphicsContext.setStroke( Color.PINK );
 		graphicsContext.strokeLine(
 			edgeArrowStart.x,
 			edgeArrowStart.y,

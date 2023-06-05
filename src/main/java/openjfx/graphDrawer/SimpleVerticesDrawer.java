@@ -6,33 +6,25 @@ import graph.Vertex;
 import javafx.scene.paint.Color;
 import openjfx.DrawingPanel;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface SimpleVerticesDrawer < VertexLabelType, EdgeType extends Edge < VertexLabelType >>
     extends VerticesDrawer < VertexLabelType, EdgeType > {
 
-    @Override
-    default void drawVertices ( Graph < VertexLabelType, EdgeType > graph, DrawingPanel drawingPanel ) {
-        var vertexList = graph.getConstVertexList();
-        var graphicsContext = drawingPanel.getGraphicsContext2D();
-        graphicsContext.setFill( Color.BLACK );
-        for ( int index = 0; index < vertexList.size(); ++ index ) {
-            var point = new Point ( ( double ) index / vertexList.size(), MAIN_CIRCLE_RADIUS );
-            graphicsContext.fillOval(
-                point.x,
-                point.y,
-                VerticesDrawer.NODE_DIAMETER,
-                VerticesDrawer.NODE_DIAMETER
-            );
+    double MAIN_CIRCLE_RADIUS = 200.0;
+    double LABEL_CIRCLE_RADIUS = 220.0;
 
-            var labelPoint = new Point ( ( double ) index / vertexList.size(), LABEL_CIRCLE_RADIUS );
-            labelPoint.x += 5;
-            labelPoint.y += 12.5;
-            graphicsContext.strokeText(
-                    vertexList.get(index).getLabel().toString(),
-                labelPoint.x,
-                labelPoint.y
-            );
+    @Override
+    default Map < Vertex < VertexLabelType, EdgeType >, Point > computeGraphPoints ( Graph < VertexLabelType, EdgeType > graph ) {
+
+        Map < Vertex < VertexLabelType, EdgeType >, Point > vertexPointMap = new HashMap <>();
+        var vertexList = graph.getConstVertexList();
+        for ( int index = 0; index < vertexList.size(); ++ index ) {
+            var point = new Point( ( double ) index / vertexList.size(), MAIN_CIRCLE_RADIUS );
+            vertexPointMap.put( vertexList.get( index ), point );
         }
+        return vertexPointMap;
     }
 }

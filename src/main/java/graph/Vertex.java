@@ -6,15 +6,12 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class Vertex <
-        LabelType,
-        EdgeType extends Edge < LabelType >
-> {
+public class Vertex < LabelType, EdgeType extends Edge < LabelType > > {
     private List < EdgeType > edgeList = new ArrayList<>();
 
     private LabelType label;
 
-    public Vertex ( ) {
+    public Vertex () {
     }
 
     public Vertex ( LabelType label ) {

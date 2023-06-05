@@ -57,6 +57,13 @@ public abstract class BipartiteGraph < VertexLabelType, EdgeType extends Edge < 
         return stringBuilder.toString();
     }
 
+
+    @Override
+    protected void checkEdgeConstraint ( Vertex < VertexLabelType, EdgeType > firstEnd, Vertex < VertexLabelType, EdgeType > secondEnd ) throws NonExistingVertexException, LoopEdgeException, BipartiteEdgeAdditionException {
+        super.checkEdgeConstraint( firstEnd, secondEnd );
+        this.checkBipartitionOnEdgeAddition( firstEnd, secondEnd );
+    }
+
     protected void checkBipartitionOnEdgeAddition (
             Vertex < VertexLabelType, EdgeType > firstVertex,
             Vertex < VertexLabelType, EdgeType > secondVertex
@@ -189,8 +196,8 @@ class BipartiteEdgeAdditionException extends Exception {
         Vertex firstVertex,
         Vertex secondVertex
     ) {
-        super ( "By adding the edge between node " + firstVertex.getLabel() +
-            " and node " + secondVertex.getLabel() +
+        super ( "By adding the edge between vertex " + firstVertex.getLabel() +
+            " and vertex " + secondVertex.getLabel() +
             " the graph would no longer be bipartite" );
     }
 }

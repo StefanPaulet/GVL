@@ -8,13 +8,12 @@ public interface DirectedEdgeAdder < VertexLabelType, EdgeType extends Edge < Ve
 
     @Override
     default void addEdgeNoexcept(
-            List < Vertex < VertexLabelType, EdgeType > > vertexList,
             Vertex < VertexLabelType, EdgeType > firstEnd,
             Vertex < VertexLabelType, EdgeType > secondEnd,
             Supplier < EdgeType > edgeSupplier
     ) throws AlreadyExistingEdgeException {
         EdgeType newFirstEndEdge = edgeSupplier.get();
-        newFirstEndEdge.setEdgeEnd( ( Vertex < VertexLabelType, Edge< VertexLabelType > > ) secondEnd );
+        newFirstEndEdge.setEdgeEnd( ( Vertex < VertexLabelType, Edge < VertexLabelType > > ) secondEnd );
         if ( firstEnd.getEdgeList().contains(newFirstEndEdge) ) {
             throw new AlreadyExistingEdgeException(firstEnd, secondEnd);
         }

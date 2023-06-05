@@ -1,9 +1,14 @@
 package openjfx.graphDrawer;
 
 import graph.Edge;
+import graph.Graph;
 
 public class DirectedBipartiteGraphDrawer < VertexLabelType, EdgeType extends Edge < VertexLabelType > >
-    implements GraphDrawer < VertexLabelType, EdgeType >,
-    BipartiteVerticesDrawer < VertexLabelType, EdgeType >,
+    extends GraphDrawer < VertexLabelType, EdgeType >
+    implements BipartiteVerticesDrawer < VertexLabelType, EdgeType >,
     DirectedEdgeDrawer < VertexLabelType, EdgeType > {
+
+    public DirectedBipartiteGraphDrawer ( Graph < VertexLabelType, EdgeType > graph ) {
+        super( graph );
+    }
 }

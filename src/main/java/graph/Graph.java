@@ -43,6 +43,38 @@ public abstract class Graph < VertexLabelType, EdgeType extends Edge < VertexLab
         return Collections.unmodifiableList(this.vertexList);
     }
 
+
+    protected void checkEdgeConstraint (
+        Vertex < VertexLabelType, EdgeType > firstEnd,
+        Vertex < VertexLabelType, EdgeType > secondEnd
+    ) throws NonExistingVertexException, LoopEdgeException, BipartiteEdgeAdditionException {
+
+        if ( ! this.vertexList.contains(firstEnd) ) {
+            throw new NonExistingVertexException(firstEnd);
+        }
+
+        if ( ! this.vertexList.contains(secondEnd) ) {
+            throw new NonExistingVertexException(secondEnd);
+        }
+
+        if ( firstEnd.equals(secondEnd) ) {
+            throw new LoopEdgeException(firstEnd);
+        }
+    }
+
+
+    @Override
+    public void addEdge (
+        Vertex < VertexLabelType, EdgeType > firstEnd,
+        Vertex < VertexLabelType, EdgeType > secondEnd,
+        Supplier < EdgeType > edgeSupplier
+    ) throws NonExistingVertexException, LoopEdgeException, AlreadyExistingEdgeException, BipartiteEdgeAdditionException {
+
+        this.checkEdgeConstraint( firstEnd, secondEnd );
+        EdgeAdder.super.addEdge( firstEnd, secondEnd, edgeSupplier );
+    }
+
+
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("Graph {\n");
@@ -83,6 +115,6 @@ class AlreadyExistingVertexException extends Exception {
 class LoopEdgeException extends Exception {
 
     LoopEdgeException ( Vertex loopedVertex ) {
-        super("Cannot add edge from vertex=" + loopedVertex + " to itself");
+        super("Cannot add edge from vertex " + loopedVertex.getLabel() + " to itself");
     }
 }

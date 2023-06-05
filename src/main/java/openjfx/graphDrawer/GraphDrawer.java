@@ -2,27 +2,34 @@ package openjfx.graphDrawer;
 
 import graph.Edge;
 import graph.Graph;
+import graph.Vertex;
 import openjfx.DrawingPanel;
 
-public interface GraphDrawer < VertexLabelType, EdgeType extends Edge < VertexLabelType > >
-    extends EdgeDrawer < VertexLabelType, EdgeType > ,
+import java.util.Map;
+
+public abstract class GraphDrawer < VertexLabelType, EdgeType extends Edge < VertexLabelType > >
+    implements EdgeDrawer < VertexLabelType, EdgeType > ,
     VerticesDrawer < VertexLabelType, EdgeType > {
 
-    default void draw (
-        Graph < VertexLabelType, EdgeType > graph,
-        DrawingPanel drawingPanel
-    ) {
-        var nodeList = graph.getConstVertexList();
-        this.drawVertices ( graph, drawingPanel );
-        for ( var node : nodeList ) {
-            Point firstPoint = new Point ( ( double ) nodeList.indexOf( node ) / ( double ) nodeList.size(), MAIN_CIRCLE_RADIUS );
+    private final Map < Vertex < VertexLabelType, EdgeType >, Point > graphPoints;
+    private final Graph < VertexLabelType, EdgeType > graph;
+
+    public GraphDrawer ( Graph < VertexLabelType, EdgeType > graph ) {
+        this.graphPoints = this.computeGraphPoints( graph );
+        this.graph = graph;
+    }
+
+    public void draw ( DrawingPanel drawingPanel ) {
+        this.drawVertices ( graphPoints.values().toArray( new Point[ 0 ] ), drawingPanel );
+        for ( var node : this.graph.getConstVertexList() ) {
+            Point firstPoint = new Point(graphPoints.get( node ));
 
             firstPoint.x += NODE_RADIUS;
             firstPoint.y += NODE_RADIUS;
 
             for ( var edge : node.getEdgeList() ) {
                 var adjacentNode = edge.getEdgeEnd();
-                Point secondPoint = new Point ( ( double ) nodeList.indexOf( adjacentNode ) / ( double ) nodeList.size(), MAIN_CIRCLE_RADIUS );
+                Point secondPoint = new Point(graphPoints.get( edge.getEdgeEnd() ));
 
                 secondPoint.x += NODE_RADIUS;
                 secondPoint.y += NODE_RADIUS;

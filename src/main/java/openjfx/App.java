@@ -4,9 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import openjfx.graphDrawer.GraphDrawer;
-import openjfx.graphDrawer.UndirectedBipartiteGraphDrawer;
-import openjfx.graphDrawer.UndirectedGraphDrawer;
+import openjfx.graphDrawer.*;
 
 public class App extends Application{
 
@@ -25,19 +23,18 @@ public class App extends Application{
         root.setCenter( drawingPanel );
 
 
-        Graph < String, Edge<String> > graph = new UndirectedBipartiteGraph <> (6, String::valueOf );
+        Graph < String, Edge<String> > graph = new DirectedBipartiteGraph <> (6, String::valueOf );
         try {
-            graph.addEdge( graph.getConstVertexList(), graph.getConstVertexList().get( 0 ), graph.getConstVertexList().get( 1 ), () -> new Edge<>() );
-            graph.addEdge( graph.getConstVertexList(), graph.getConstVertexList().get( 0 ), graph.getConstVertexList().get( 3 ), () -> new Edge<>() );
-            graph.addEdge( graph.getConstVertexList(), graph.getConstVertexList().get( 2 ), graph.getConstVertexList().get( 5 ), () -> new Edge<>() );
-            graph.addEdge( graph.getConstVertexList(), graph.getConstVertexList().get( 4 ), graph.getConstVertexList().get( 5 ), () -> new Edge<>() );
-            graph.addEdge( graph.getConstVertexList(), graph.getConstVertexList().get( 0 ), graph.getConstVertexList().get( 5 ), () -> new Edge<>() );
+            graph.addEdge( graph.getConstVertexList().get( 0 ), graph.getConstVertexList().get( 1 ), () -> new Edge<>() );
+            graph.addEdge( graph.getConstVertexList().get( 2 ), graph.getConstVertexList().get( 5 ), () -> new Edge<>() );
+            graph.addEdge( graph.getConstVertexList().get( 4 ), graph.getConstVertexList().get( 5 ), () -> new Edge<>() );
+            graph.addEdge( graph.getConstVertexList().get( 0 ), graph.getConstVertexList().get( 5 ), () -> new Edge<>() );
         } catch ( Exception e ) {
             e.printStackTrace ();
         }
 
-        GraphDrawer < String, Edge < String > > graphDrawer = new UndirectedBipartiteGraphDrawer <>();
-        graphDrawer.draw( graph, drawingPanel );
+        GraphDrawer < String, Edge < String > > graphDrawer = new DirectedBipartiteGraphDrawer <>(graph);
+        graphDrawer.draw( drawingPanel );
 
         Scene scene = new Scene( root, WINDOW_WIDTH,WINDOW_HEIGHT );
         primaryStage.setTitle( "First JavaFX Application" );
