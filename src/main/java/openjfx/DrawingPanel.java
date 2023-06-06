@@ -9,10 +9,14 @@ import static openjfx.App.WINDOW_WIDTH;
 
 public class DrawingPanel extends Canvas {
 
+    private final Engine engine;
+
     public final static double CANVAS_WIDTH = WINDOW_WIDTH * 3 / 4;
     public final static double CANVAS_HEIGHT = WINDOW_HEIGHT * 3 / 4;
 
-    public DrawingPanel () {
+    public DrawingPanel ( Engine engine ) {
         super(CANVAS_WIDTH, CANVAS_HEIGHT);
+        this.engine = engine;
+        this.engine.setDrawingPanel( this );
     }
 }

@@ -12,41 +12,46 @@ import java.util.function.UnaryOperator;
 
 public class ConfigPanel extends GridPane {
 
-    private final Label vertexCountLabel = new Label("Number of vertices:");
+    private final Engine engine;
     private final TextField vertexCountInput = new TextField();
 
-    private final Label generateRandomEdgesLabel = new Label("Generate random edges?");
     private final CheckBox randomisedEdgeCheckBox = new CheckBox();
 
     private final Label edgeProababilityLabel = new Label("Edge probability:0.5");
     private final Slider edgeProbabilitySlider = new Slider(0.0, 1.0, 0.5);
 
-    private final Label graphTypeLabel = new Label("Choose the graph type:");
     private final ComboBox<String> graphTypeDropdown = new ComboBox<>(
             FXCollections.observableArrayList(
-                    "SimpleGraph",
-                    "BipartiteGraph",
-                    "FlowNetwork"
+                    "DirectedGraph",
+                    "UndirectedGraph",
+                    "DirectedBipartiteGraph",
+                    "UndirectedBipartiteGraph"
             )
     );
 
     private final Button generateGraphButton = new Button("Generate");
 
-    public ConfigPanel() {
+    public ConfigPanel(Engine engine) {
         super();
+
+        this.engine = engine;
 
         this.setHgap(50);
         this.setAlignment(Pos.CENTER);
 
-        this.addColumn(0, this.vertexCountLabel, this.vertexCountInput);
+        Label vertexCountLabel = new Label( "Number of vertices:" );
+        this.addColumn(0, vertexCountLabel, this.vertexCountInput);
 
-        this.addColumn(1, this.generateRandomEdgesLabel, this.randomisedEdgeCheckBox);
+        Label generateRandomEdgesLabel = new Label( "Generate random edges?" );
+        this.addColumn(1, generateRandomEdgesLabel, this.randomisedEdgeCheckBox);
         GridPane.setHalignment(this.randomisedEdgeCheckBox, HPos.CENTER);
 
         this.addColumn(2,this.edgeProababilityLabel, this.edgeProbabilitySlider );
         this.edgeProbabilitySlider.setDisable(true);
 
-        this.addColumn(3, this.graphTypeLabel, this.graphTypeDropdown);
+        Label graphTypeLabel = new Label( "Choose the graph type:" );
+        this.addColumn(3, graphTypeLabel, this.graphTypeDropdown);
+        this.graphTypeDropdown.setValue( "" );
 
         this.add(this.generateGraphButton, 4, 1);
         GridPane.setValignment(this.generateGraphButton, VPos.CENTER);
@@ -65,7 +70,7 @@ public class ConfigPanel extends GridPane {
         );
 
         this.generateGraphButton.setOnAction(
-            e -> System.out.println("Graph")
+            e -> this.generateNewGraph()
         );
     }
 
@@ -73,7 +78,7 @@ public class ConfigPanel extends GridPane {
         UnaryOperator<TextFormatter.Change> integerFilter = change -> {
             String input = change.getControlNewText();
             if ( input.matches("^[1-9]\\d*$|")) {
-                if ( ! input.equals( "" ) && Integer.parseInt( input ) > 25 ) {
+                if ( ! input.equals( "" ) && Integer.parseInt( input ) > 15 ) {
                     return null;
                 }
                 return change;
@@ -81,5 +86,25 @@ public class ConfigPanel extends GridPane {
             return null;
         };
         this.vertexCountInput.setTextFormatter(new TextFormatter<>(integerFilter));
+    }
+
+
+    private void generateNewGraph() {
+
+        String graphType = this.graphTypeDropdown.getValue();
+        if ( graphType.equals( "" ) ) {
+            this.engine.getInfoPanel().setSystemMessage( "You must select a graph type" );
+            return;
+        }
+
+        if ( this.vertexCountInput.textProperty().getValue().equals( "" ) ) {
+            this.engine.getInfoPanel().setSystemMessage( "You must provide a number of vertices between 1 and 15" );
+            return;
+        }
+        int nodeCount = Integer.parseInt( this.vertexCountInput.textProperty().getValue() );
+
+        double edgeProbability = this.randomisedEdgeCheckBox.isSelected() ? this.edgeProbabilitySlider.getValue() : 0.0;
+
+        this.engine.instantiateGraph( graphType, nodeCount, edgeProbability );
     }
 }

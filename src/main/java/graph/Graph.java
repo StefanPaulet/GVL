@@ -3,6 +3,7 @@ package graph;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -37,6 +38,26 @@ public abstract class Graph < VertexLabelType, EdgeType extends Edge < VertexLab
 
         newVertex.getEdgeList().clear();
         this.vertexList.add(newVertex);
+    }
+
+    public void fillWithRandomEdges(double edgeProbability, Supplier<EdgeType> edgeTypeSupplier) {
+
+
+        Random random = new Random();
+
+        for ( int index = 0; index < this.vertexList.size(); ++index ) {
+            Vertex firstVertex = this.vertexList.get( index );
+            for ( int jIndex = index + 1; jIndex < this.vertexList.size(); ++jIndex ) {
+                Vertex secondVertex = this.vertexList.get( jIndex );
+                if ( random.nextDouble(1.0) < edgeProbability ) {
+                    try {
+                        this.addEdge( firstVertex, secondVertex, edgeTypeSupplier );
+                    } catch ( Exception ignored ) {
+
+                    }
+                }
+            }
+        }
     }
 
     public List < Vertex < VertexLabelType, EdgeType > > getConstVertexList () {

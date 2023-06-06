@@ -12,31 +12,24 @@ public class App extends Application{
     public final static double WINDOW_HEIGHT = 720;
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
+
+        Engine engine = new Engine();
 
         BorderPane root = new BorderPane();
 
-        ConfigPanel configPanel = new ConfigPanel();
+        ConfigPanel configPanel = new ConfigPanel(engine);
         root.setTop( configPanel );
 
-        DrawingPanel drawingPanel = new DrawingPanel();
+        DrawingPanel drawingPanel = new DrawingPanel(engine);
         root.setCenter( drawingPanel );
 
+        InfoPanel infoPanel = new InfoPanel();
+        engine.setInfoPanel( infoPanel );
+        root.setLeft( infoPanel );
 
-        Graph < String, Edge<String> > graph = new DirectedBipartiteGraph <> (6, String::valueOf );
-        try {
-            graph.addEdge( graph.getConstVertexList().get( 0 ), graph.getConstVertexList().get( 1 ), () -> new Edge<>() );
-            graph.addEdge( graph.getConstVertexList().get( 2 ), graph.getConstVertexList().get( 5 ), () -> new Edge<>() );
-            graph.addEdge( graph.getConstVertexList().get( 4 ), graph.getConstVertexList().get( 5 ), () -> new Edge<>() );
-            graph.addEdge( graph.getConstVertexList().get( 0 ), graph.getConstVertexList().get( 5 ), () -> new Edge<>() );
-        } catch ( Exception e ) {
-            e.printStackTrace ();
-        }
 
-        GraphDrawer < String, Edge < String > > graphDrawer = new DirectedBipartiteGraphDrawer <>(graph);
-        graphDrawer.draw( drawingPanel );
-
-        Scene scene = new Scene( root, WINDOW_WIDTH,WINDOW_HEIGHT );
+        Scene scene = new Scene( root, WINDOW_WIDTH, WINDOW_HEIGHT );
         primaryStage.setTitle( "First JavaFX Application" );
         primaryStage.setScene( scene );
         primaryStage.show();

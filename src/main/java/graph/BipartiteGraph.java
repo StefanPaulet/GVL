@@ -5,6 +5,8 @@ import javafx.scene.control.Label;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public abstract class BipartiteGraph < VertexLabelType, EdgeType extends Edge < VertexLabelType > >
     extends Graph < VertexLabelType, EdgeType > {
@@ -34,6 +36,28 @@ public abstract class BipartiteGraph < VertexLabelType, EdgeType extends Edge < 
                 vertexColorings.put(this.vertexList.get(index), VertexColoring.BLUE);
             }
         }
+    }
+
+
+    @Override
+    public void fillWithRandomEdges ( double edgeProbability, Supplier<EdgeType> edgeTypeSupplier ) {
+        Random random = new Random();
+        this.vertexColorings.entrySet()
+            .stream()
+            .filter( el -> el.getValue() == VertexColoring.RED )
+            .forEach(
+                first -> this.vertexColorings.entrySet()
+                    .stream()
+                    .filter( el -> el.getValue() == VertexColoring.BLUE )
+                    .filter( el -> random.nextDouble(1.0) < edgeProbability)
+                    .map( Map.Entry :: getKey ).forEach (
+                    second -> {
+                        try {
+                            this.addEdge( first.getKey(), second, edgeTypeSupplier );
+                        } catch ( Exception ignored ) {}
+                    }
+                )
+            );
     }
 
     public Map < Vertex < VertexLabelType, EdgeType >, VertexColoring > getVertexColorings () {
