@@ -1,7 +1,6 @@
 package openjfx.graphDrawer;
 
 import graph.*;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.shape.Circle;
 import openjfx.DrawingPanel;
@@ -108,7 +107,7 @@ public abstract class GraphDrawer < VertexLabelType, EdgeType extends Edge < Ver
             this.graph.addEdge(
                 firstVertex,
                 secondVertex,
-                () -> ( EdgeType ) new Edge()
+                this.engine.edgeSupplier()
             );
 
             var edgeShape = this.computeEdge( firstCircle, secondCircle );

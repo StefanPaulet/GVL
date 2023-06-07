@@ -4,6 +4,9 @@ public class Point {
     public double x;
     public double y;
 
+    public Point () {
+    }
+
     public Point ( Point other ) {
         this.x = other.x;
         this.y = other.y;

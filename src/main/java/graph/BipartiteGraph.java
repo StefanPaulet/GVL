@@ -58,6 +58,22 @@ public abstract class BipartiteGraph < VertexLabelType, EdgeType extends Edge < 
                     }
                 )
             );
+        this.vertexColorings.entrySet()
+            .stream()
+            .filter( el -> el.getValue() == VertexColoring.BLUE )
+            .forEach(
+                first -> this.vertexColorings.entrySet()
+                    .stream()
+                    .filter( el -> el.getValue() == VertexColoring.RED )
+                    .filter( el -> random.nextDouble(1.0) < edgeProbability)
+                    .map( Map.Entry :: getKey ).forEach (
+                    second -> {
+                        try {
+                            this.addEdge( first.getKey(), second, edgeTypeSupplier );
+                        } catch ( Exception ignored ) {}
+                    }
+                )
+            );
     }
 
     public Map < Vertex < VertexLabelType, EdgeType >, VertexColoring > getVertexColorings () {

@@ -1,5 +1,6 @@
 package openjfx;
 
+import graph.Edge;
 import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -12,29 +13,33 @@ import java.util.function.UnaryOperator;
 
 public class ConfigPanel extends GridPane {
 
-    private final Engine engine;
+    private static final EngineFactory engineFactory = new EngineFactory();
+
+    private Engine engine;
     private final TextField vertexCountInput = new TextField();
 
     private final CheckBox randomisedEdgeCheckBox = new CheckBox();
 
     private final Label edgeProababilityLabel = new Label("Edge probability:0.5");
     private final Slider edgeProbabilitySlider = new Slider(0.0, 1.0, 0.5);
-
-    private final ComboBox<String> graphTypeDropdown = new ComboBox<>(
-            FXCollections.observableArrayList(
-                    "DirectedGraph",
-                    "UndirectedGraph",
-                    "DirectedBipartiteGraph",
-                    "UndirectedBipartiteGraph"
-            )
+    private final ComboBox<String> edgeTypeDropdown = new ComboBox <>(
+        FXCollections.observableArrayList(
+            "WeighedEdge",
+            "Edge"
+        )
     );
 
-    private final Button generateGraphButton = new Button("Generate");
+    private final ComboBox<String> graphTypeDropdown = new ComboBox<>(
+        FXCollections.observableArrayList(
+            "DirectedGraph",
+            "UndirectedGraph",
+            "DirectedBipartiteGraph",
+            "UndirectedBipartiteGraph"
+        )
+    );
 
-    public ConfigPanel(Engine engine) {
+    public ConfigPanel() {
         super();
-
-        this.engine = engine;
 
         this.setHgap(50);
         this.setAlignment(Pos.CENTER);
@@ -53,8 +58,13 @@ public class ConfigPanel extends GridPane {
         this.addColumn(3, graphTypeLabel, this.graphTypeDropdown);
         this.graphTypeDropdown.setValue( "" );
 
-        this.add(this.generateGraphButton, 4, 1);
-        GridPane.setValignment(this.generateGraphButton, VPos.CENTER);
+        Label edgeTypeLabel = new Label( "Choose the edge type:" );
+        this.addColumn( 4, edgeTypeLabel, this.edgeTypeDropdown );
+        this.edgeTypeDropdown.setValue( "" );
+
+        Button generateGraphButton = new Button( "Generate" );
+        this.add( generateGraphButton, 5, 1);
+        GridPane.setValignment( generateGraphButton, VPos.CENTER);
 
         this.enableInputVerticesFormatter();
         this.randomisedEdgeCheckBox.setOnAction(
@@ -69,7 +79,7 @@ public class ConfigPanel extends GridPane {
                 }
         );
 
-        this.generateGraphButton.setOnAction(
+        generateGraphButton.setOnAction(
             e -> this.generateNewGraph()
         );
     }
@@ -91,6 +101,11 @@ public class ConfigPanel extends GridPane {
 
     private void generateNewGraph() {
 
+        if ( this.edgeTypeDropdown.getValue().equals( "" ) ) {
+            return;
+        }
+        instantiateEngine( this.edgeTypeDropdown.getValue() );
+
         String graphType = this.graphTypeDropdown.getValue();
         if ( graphType.equals( "" ) ) {
             this.engine.getInfoPanel().setSystemMessage( "You must select a graph type" );
@@ -106,5 +121,27 @@ public class ConfigPanel extends GridPane {
         double edgeProbability = this.randomisedEdgeCheckBox.isSelected() ? this.edgeProbabilitySlider.getValue() : 0.0;
 
         this.engine.instantiateGraph( graphType, nodeCount, edgeProbability );
+    }
+
+    private void instantiateEngine(String edgeClassType) {
+        try {
+            Class < Edge < Integer > > edgeClass = ( Class < Edge < Integer > > ) Class.forName( "graph." + edgeClassType );
+            this.engine = engineFactory.getEngine(
+                edgeClass,
+                ( DrawingPanel ) this.getParent().getChildrenUnmodifiable().stream()
+                    .filter( e -> e.getClass() == DrawingPanel.class )
+                    .findAny().get(),
+                ( InfoPanel ) this.getParent().getChildrenUnmodifiable().stream()
+                    .filter( e -> e.getClass() == InfoPanel.class )
+                    .findAny().get()
+            );
+
+        } catch ( Exception e ) {
+            e.printStackTrace();
+        }
+    }
+
+    public Engine getEngine () {
+        return engine;
     }
 }

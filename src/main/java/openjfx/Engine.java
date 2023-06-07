@@ -2,40 +2,38 @@ package openjfx;
 
 import graph.Edge;
 import graph.Graph;
-import graph.Vertex;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import openjfx.graphDrawer.EdgeShape;
 import openjfx.graphDrawer.GraphDrawer;
-import openjfx.graphDrawer.Point;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
-public class Engine {
+public abstract class Engine < VertexLabelType, EdgeType extends Edge < VertexLabelType > > {
 
-    private Graph graph;
-    private GraphDrawer graphDrawer;
-    private DrawingPanel drawingPanel;
+    private Graph < VertexLabelType, EdgeType > graph;
+    private GraphDrawer < VertexLabelType, EdgeType > graphDrawer;
+    private final DrawingPanel drawingPanel;
 
-    private InfoPanel infoPanel;
+    private final InfoPanel infoPanel;
     private final EngineState state = new EngineState();
 
-    public void setDrawingPanel ( DrawingPanel drawingPanel ) {
+
+    public Engine ( DrawingPanel drawingPanel, InfoPanel infoPanel ) {
         this.drawingPanel = drawingPanel;
+        this.infoPanel = infoPanel;
+        drawingPanel.setEngine( this );
     }
+
+    abstract public Supplier < EdgeType > edgeSupplier();
 
     public InfoPanel getInfoPanel () {
         return infoPanel;
     }
-
-    public void setInfoPanel ( InfoPanel infoPanel ) {
-        this.infoPanel = infoPanel;
-    }
     public void instantiateGraph ( String graphType, int nodeCount, double edgeProbability ) {
         try {
-            Class<Graph<?, ?>> graphClass = ( Class < Graph <?, ?> > ) Class.forName( "graph." + graphType );
+            Class < Graph < VertexLabelType, EdgeType > > graphClass = ( Class < Graph < VertexLabelType, EdgeType > > ) Class.forName( "graph." + graphType );
             var graphConstructor = graphClass.getConstructor( int.class, Function.class );
             this.graph = graphConstructor.newInstance( nodeCount, ( Function < Integer, Integer > ) integer -> integer );
         } catch ( Exception e ) {
@@ -43,11 +41,11 @@ public class Engine {
         }
 
         if ( edgeProbability != 0.0 ) {
-            this.graph.fillWithRandomEdges( edgeProbability, () -> new Edge<>() );
+            this.graph.fillWithRandomEdges( edgeProbability, this.edgeSupplier() );
         }
 
         try {
-            Class<GraphDrawer<?,?>> graphDrawerClass = ( Class < GraphDrawer <?, ?> > ) Class.forName( "openjfx.graphDrawer." + graphType + "Drawer" );
+            Class < GraphDrawer < VertexLabelType, EdgeType > > graphDrawerClass = ( Class < GraphDrawer < VertexLabelType, EdgeType > > ) Class.forName( "openjfx.graphDrawer." + graphType + "Drawer" );
             var graphDrawerConstructor = graphDrawerClass.getConstructor( Graph.class, Engine.class );
             this.graphDrawer = graphDrawerConstructor.newInstance( this.graph, this );
         } catch ( Exception e) {
