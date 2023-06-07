@@ -65,6 +65,19 @@ public abstract class BipartiteGraph < VertexLabelType, EdgeType extends Edge < 
     }
 
     @Override
+    public void removeEdge ( Vertex < VertexLabelType, EdgeType > firstEnd, EdgeType edge ) throws NonExistingVertexException, NonExistingEdgeException {
+        super.removeEdge( firstEnd, edge );
+        List < Vertex < VertexLabelType, EdgeType > > firstEndSubgraph = this.computeVertexSubgraph( firstEnd );
+        if ( firstEndSubgraph.size() != this.vertexToSubgraphMap.get( firstEnd ).size() ) {
+            var secondSubgraph = this.vertexToSubgraphMap.get( firstEnd );
+            for ( var vertex : firstEndSubgraph ) {
+                secondSubgraph.remove( vertex );
+                this.vertexToSubgraphMap.put( vertex, firstEndSubgraph );
+            }
+        }
+    }
+
+    @Override
     public String toString () {
         StringBuilder stringBuilder = new StringBuilder("Graph {\n");
         for ( Vertex < VertexLabelType, EdgeType > vertex : this.vertexList ) {
@@ -206,6 +219,28 @@ public abstract class BipartiteGraph < VertexLabelType, EdgeType extends Edge < 
                 }
             }
         }
+    }
+
+    private List < Vertex < VertexLabelType, EdgeType > > computeVertexSubgraph( Vertex < VertexLabelType, EdgeType > startVertex ) {
+
+        List < Vertex < VertexLabelType, EdgeType > > resultList = new ArrayList <>();
+        resultList.add( startVertex );
+
+        Queue < Vertex < VertexLabelType, EdgeType > > vertexQueue = new LinkedList<>();
+        vertexQueue.add(startVertex);
+
+        while ( ! vertexQueue.isEmpty() ) {
+            var currentVertex = vertexQueue.remove();
+            for ( var edge : currentVertex.getEdgeList() ) {
+                Vertex < VertexLabelType, EdgeType > adjacentVertex = ( Vertex < VertexLabelType, EdgeType > ) edge.getEdgeEnd();
+                if ( ! resultList.contains( adjacentVertex ) ) {
+                    vertexQueue.add( adjacentVertex );
+                    resultList.add ( adjacentVertex);
+                }
+            }
+        }
+        return resultList;
+
     }
 }
 

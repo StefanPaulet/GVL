@@ -14,9 +14,15 @@ public interface DirectedEdgeAdder < VertexLabelType, EdgeType extends Edge < Ve
     ) throws AlreadyExistingEdgeException {
         EdgeType newFirstEndEdge = edgeSupplier.get();
         newFirstEndEdge.setEdgeEnd( ( Vertex < VertexLabelType, Edge < VertexLabelType > > ) secondEnd );
+        newFirstEndEdge.setOwnerVertex( ( Vertex < VertexLabelType, Edge < VertexLabelType > > ) firstEnd );
         if ( firstEnd.getEdgeList().contains(newFirstEndEdge) ) {
             throw new AlreadyExistingEdgeException(firstEnd, secondEnd);
         }
         firstEnd.getEdgeList().add(newFirstEndEdge);
+    }
+
+    @Override
+    default void removeEdgeNoexcept ( Vertex < VertexLabelType, EdgeType > firstEnd, EdgeType edge ) {
+        firstEnd.getEdgeList().remove( edge );
     }
 }

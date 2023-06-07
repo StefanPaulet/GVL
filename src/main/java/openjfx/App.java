@@ -1,8 +1,14 @@
 package openjfx;
 import graph.*;
 import javafx.application.Application;
+import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import openjfx.graphDrawer.*;
 
@@ -30,6 +36,12 @@ public class App extends Application{
 
 
         Scene scene = new Scene( root, WINDOW_WIDTH, WINDOW_HEIGHT );
+        scene.addEventHandler( KeyEvent.KEY_PRESSED, (key) -> {
+                if ( key.getCode() == KeyCode.DELETE ) {
+                    engine.handleDeleteKey();
+                }
+            }
+        );
         primaryStage.setTitle( "First JavaFX Application" );
         primaryStage.setScene( scene );
         primaryStage.show();

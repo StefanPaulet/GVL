@@ -3,10 +3,14 @@ package openjfx;
 import graph.Edge;
 import graph.Graph;
 import graph.Vertex;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import openjfx.graphDrawer.EdgeShape;
 import openjfx.graphDrawer.GraphDrawer;
+import openjfx.graphDrawer.Point;
 
-import java.util.List;
-import java.util.Random;
 import java.util.function.Function;
 
 public class Engine {
@@ -16,6 +20,7 @@ public class Engine {
     private DrawingPanel drawingPanel;
 
     private InfoPanel infoPanel;
+    private final EngineState state = new EngineState();
 
     public void setDrawingPanel ( DrawingPanel drawingPanel ) {
         this.drawingPanel = drawingPanel;
@@ -28,11 +33,6 @@ public class Engine {
     public void setInfoPanel ( InfoPanel infoPanel ) {
         this.infoPanel = infoPanel;
     }
-
-    public void drawGraph () {
-        this.graphDrawer.draw( this.drawingPanel );
-    }
-
     public void instantiateGraph ( String graphType, int nodeCount, double edgeProbability ) {
         try {
             Class<Graph<?, ?>> graphClass = ( Class < Graph <?, ?> > ) Class.forName( "graph." + graphType );
@@ -48,12 +48,69 @@ public class Engine {
 
         try {
             Class<GraphDrawer<?,?>> graphDrawerClass = ( Class < GraphDrawer <?, ?> > ) Class.forName( "openjfx.graphDrawer." + graphType + "Drawer" );
-            var graphDrawerConstructor = graphDrawerClass.getConstructor( Graph.class );
-            this.graphDrawer = graphDrawerConstructor.newInstance( this.graph );
+            var graphDrawerConstructor = graphDrawerClass.getConstructor( Graph.class, Engine.class );
+            this.graphDrawer = graphDrawerConstructor.newInstance( this.graph, this );
         } catch ( Exception e) {
             e.printStackTrace();
         }
-
-        this.drawGraph();
     }
+
+
+    public void handleVertexClick ( Circle clickedCircle ) {
+
+        if ( this.state.selectedEdge != null ) {
+            return;
+        }
+
+        if ( this.state.selectedCircle == null ) {
+            this.state.selectedCircle = clickedCircle;
+            clickedCircle.setFill( Color.RED );
+        } else {
+            this.graphDrawer.addEdge( this.state.selectedCircle, clickedCircle );
+            this.state.selectedCircle.setFill( Color.BLACK );
+            this.state.selectedCircle = null;
+        }
+    }
+
+    public void handleEdgeClick ( EdgeShape edgeClicked ) {
+
+        if ( this.state.selectedCircle != null ) {
+            return;
+        }
+
+        if ( this.state.selectedEdge == null ) {
+            if ( edgeClicked != null ) {
+                edgeClicked.select();
+                this.state.selectedEdge = edgeClicked;
+            }
+        } else {
+            if ( edgeClicked.equals( state.selectedEdge ) ) {
+                edgeClicked.deselect();
+                this.state.selectedEdge = null;
+            } else {
+                this.state.selectedEdge.deselect();
+                edgeClicked.select();
+                this.state.selectedEdge = edgeClicked;
+            }
+        }
+    }
+
+    public void handleDeleteKey () {
+        if ( this.state.selectedEdge != null ) {
+            this.graphDrawer.removeEdge( this.state.selectedEdge );
+            this.drawingPanel.getChildren().remove( this.state.selectedEdge );
+            this.state.selectedEdge = null;
+        }
+    }
+
+    public DrawingPanel getDrawingPanel () {
+        return drawingPanel;
+    }
+}
+
+
+class EngineState {
+    Circle selectedCircle;
+    EdgeShape selectedEdge;
+    boolean algorithmRunning = false;
 }

@@ -23,11 +23,11 @@ public class InfoPanel extends VBox {
         this.getChildren().addAll( systemMessage, algorithmMessage );
     }
 
-    void setSystemMessage( String message ) {
+    public void setSystemMessage( String message ) {
         this.systemMessage.textProperty().set( message );
     }
 
-    void setAlgorithmMessage( String message ) {
+    public void setAlgorithmMessage( String message ) {
         this.algorithmMessage.textProperty().set( message );
     }
 }

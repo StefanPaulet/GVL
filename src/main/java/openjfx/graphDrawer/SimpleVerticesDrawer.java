@@ -4,6 +4,7 @@ import graph.Edge;
 import graph.Graph;
 import graph.Vertex;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import openjfx.DrawingPanel;
 
 import java.util.HashMap;
@@ -17,13 +18,18 @@ public interface SimpleVerticesDrawer < VertexLabelType, EdgeType extends Edge <
     double LABEL_CIRCLE_RADIUS = 220.0;
 
     @Override
-    default Map < Vertex < VertexLabelType, EdgeType >, Point > computeGraphPoints ( Graph < VertexLabelType, EdgeType > graph ) {
+    default Map < Circle, Vertex < VertexLabelType, EdgeType > > computeGraphPoints ( Graph < VertexLabelType, EdgeType > graph ) {
 
-        Map < Vertex < VertexLabelType, EdgeType >, Point > vertexPointMap = new HashMap <>();
+        Map < Circle, Vertex < VertexLabelType, EdgeType > > vertexPointMap = new HashMap <>();
         var vertexList = graph.getConstVertexList();
         for ( int index = 0; index < vertexList.size(); ++ index ) {
-            var point = new Point( ( double ) index / vertexList.size(), MAIN_CIRCLE_RADIUS );
-            vertexPointMap.put( vertexList.get( index ), point );
+
+            var point = new Circle(
+                VerticesDrawer.MAIN_CIRCLE_X + MAIN_CIRCLE_RADIUS * Math.cos( 2 * Math.PI * ( double ) index / vertexList.size() ),
+                VerticesDrawer.MAIN_CIRCLE_Y + MAIN_CIRCLE_RADIUS * Math.sin( 2 * Math.PI * ( double ) index / vertexList.size() ),
+                NODE_RADIUS
+            );
+            vertexPointMap.put( point, vertexList.get( index ) );
         }
         return vertexPointMap;
     }

@@ -18,4 +18,18 @@ public interface EdgeAdder < VertexLabelType, EdgeType extends Edge < VertexLabe
         Vertex < VertexLabelType, EdgeType > secondEnd,
         Supplier < EdgeType > edgeSupplier
     ) throws AlreadyExistingEdgeException;
+
+
+    default void removeEdge (
+        Vertex < VertexLabelType, EdgeType > firstEnd,
+        EdgeType edge
+    ) throws NonExistingEdgeException, NonExistingVertexException {
+        this.removeEdgeNoexcept( firstEnd, edge );
+    }
+
+
+    void removeEdgeNoexcept (
+        Vertex < VertexLabelType, EdgeType > firstEnd,
+        EdgeType edge
+    );
 }

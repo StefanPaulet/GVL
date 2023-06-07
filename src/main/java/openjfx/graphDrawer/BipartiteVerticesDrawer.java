@@ -4,6 +4,8 @@ import graph.BipartiteGraph;
 import graph.Edge;
 import graph.Graph;
 import graph.Vertex;
+import javafx.scene.shape.Circle;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,33 +19,33 @@ public interface BipartiteVerticesDrawer < VertexLabelType, EdgeType extends Edg
 
 
     @Override
-    default Map < Vertex < VertexLabelType, EdgeType >, Point > computeGraphPoints ( Graph < VertexLabelType, EdgeType > graph ) {
+    default Map < Circle, Vertex < VertexLabelType, EdgeType > > computeGraphPoints ( Graph < VertexLabelType, EdgeType > graph ) {
         if ( ! ( graph instanceof BipartiteGraph < VertexLabelType, EdgeType > bipartiteGraph ) ) {
             return null;
         }
 
-        Map < Vertex < VertexLabelType, EdgeType >, Point > vertexPointMap = new HashMap <>();
+        Map < Circle, Vertex < VertexLabelType, EdgeType > > vertexPointMap = new HashMap <>();
 
         int redVertexIndex = 0;
         int blueVertexIndex = 0;
 
         var vertexColorings = bipartiteGraph.getVertexColorings();
         for ( var vertex : graph.getConstVertexList() ) {
-            Point point;
+            Circle circle;
             if ( vertexColorings.get( vertex ) == BipartiteGraph.VertexColoring.RED ) {
-                point = new Point(
-                    true,
+                circle = new Circle(
                     RED_PARTITION_X,
-                    VERTEX_Y_START + ( redVertexIndex++ ) * VERTICAL_VERTEX_GAP
+                    VERTEX_Y_START + ( redVertexIndex++ ) * VERTICAL_VERTEX_GAP,
+                    NODE_RADIUS
                 );
             } else {
-                point = new Point(
-                    true,
+                circle = new Circle(
                     BLUE_PARTITION_X,
-                    VERTEX_Y_START + ( blueVertexIndex++ ) * VERTICAL_VERTEX_GAP
+                    VERTEX_Y_START + ( blueVertexIndex++ ) * VERTICAL_VERTEX_GAP,
+                    NODE_RADIUS
                 );
             }
-            vertexPointMap.put( vertex, point );
+            vertexPointMap.put( circle, vertex );
         }
 
         return vertexPointMap;

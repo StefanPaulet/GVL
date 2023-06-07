@@ -4,6 +4,8 @@ import graph.FlowNetwork;
 import graph.FlowNetworkEdge;
 import graph.Graph;
 import graph.Vertex;
+import javafx.scene.shape.Circle;
+import openjfx.Engine;
 
 import java.util.Map;
 
@@ -17,18 +19,18 @@ public class FlowNetworkDrawer < VertexLabelType, EdgeType extends FlowNetworkEd
     private static final double SINK_X = 825.0;
     private static final double SINK_Y = MAIN_CIRCLE_Y;
 
-    public FlowNetworkDrawer ( Graph < VertexLabelType, EdgeType > graph ) {
-        super( graph );
+    public FlowNetworkDrawer ( Graph < VertexLabelType, EdgeType > graph, Engine engine ) {
+        super( graph, engine );
     }
 
     @Override
-    public Map < Vertex < VertexLabelType, EdgeType >, Point > computeGraphPoints ( Graph < VertexLabelType, EdgeType > graph ) {
+    public Map < Circle, Vertex < VertexLabelType, EdgeType > > computeGraphPoints ( Graph < VertexLabelType, EdgeType > graph ) {
         if ( ! ( graph instanceof FlowNetwork < VertexLabelType, EdgeType > flowNetwork ) ) {
             return null;
         }
         var resultMap = SimpleVerticesDrawer.super.computeGraphPoints( graph );
-        resultMap.put( flowNetwork.getSource(), new Point( true, SOURCE_X, SOURCE_Y ));
-        resultMap.put( flowNetwork.getSink(), new Point( true, SINK_X, SINK_Y ));
+        resultMap.put( new Circle( SOURCE_X, SOURCE_Y, NODE_RADIUS ), flowNetwork.getSource());
+        resultMap.put( new Circle( SINK_X, SINK_Y, NODE_RADIUS ), flowNetwork.getSink() );
 
         return resultMap;
     }

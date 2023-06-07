@@ -1,8 +1,12 @@
 package graph;
 
+import java.util.Objects;
+
 public class Edge < VertexLabelType > {
 
     private Vertex < VertexLabelType, Edge < VertexLabelType > > edgeEnd;
+    private Vertex < VertexLabelType, Edge < VertexLabelType > > ownerVertex;
+
 
     public Edge ( ) {
     }
@@ -19,6 +23,14 @@ public class Edge < VertexLabelType > {
         this.edgeEnd = edgeEnd;
     }
 
+    public Vertex < VertexLabelType, Edge < VertexLabelType > > getOwnerVertex () {
+        return ownerVertex;
+    }
+
+    public void setOwnerVertex ( Vertex < VertexLabelType, Edge < VertexLabelType > > ownerVertex ) {
+        this.ownerVertex = ownerVertex;
+    }
+
     @Override
     public String toString() {
         return "Edge { " +
@@ -27,17 +39,20 @@ public class Edge < VertexLabelType > {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals ( Object o ) {
+        if ( this == o ) return true;
+        if ( o == null || getClass() != o.getClass() ) return false;
 
-        Edge<?> edge = (Edge<?>) o;
+        Edge < ? > edge = ( Edge < ? > ) o;
 
-        return edgeEnd.equals(edge.edgeEnd);
+        if ( !Objects.equals( edgeEnd, edge.edgeEnd ) ) return false;
+        return Objects.equals( ownerVertex, edge.ownerVertex );
     }
 
     @Override
-    public int hashCode() {
-        return edgeEnd.hashCode();
+    public int hashCode () {
+        int result = edgeEnd != null ? edgeEnd.hashCode() : 0;
+        result = 31 * result + ( ownerVertex != null ? ownerVertex.hashCode() : 0 );
+        return result;
     }
 }

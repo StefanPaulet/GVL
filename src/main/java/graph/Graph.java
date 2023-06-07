@@ -40,22 +40,18 @@ public abstract class Graph < VertexLabelType, EdgeType extends Edge < VertexLab
         this.vertexList.add(newVertex);
     }
 
-    public void fillWithRandomEdges(double edgeProbability, Supplier<EdgeType> edgeTypeSupplier) {
 
+    public void fillWithRandomEdges(double edgeProbability, Supplier<EdgeType> edgeTypeSupplier) {
 
         Random random = new Random();
 
-        for ( int index = 0; index < this.vertexList.size(); ++index ) {
-            Vertex firstVertex = this.vertexList.get( index );
-            for ( int jIndex = index + 1; jIndex < this.vertexList.size(); ++jIndex ) {
-                Vertex secondVertex = this.vertexList.get( jIndex );
-                if ( random.nextDouble(1.0) < edgeProbability ) {
-                    try {
-                        this.addEdge( firstVertex, secondVertex, edgeTypeSupplier );
-                    } catch ( Exception ignored ) {
-
+        for ( var firstVertex : this.vertexList ) {
+            for ( var secondVertex : this.vertexList ) {
+                    if ( random.nextDouble(1.0) < edgeProbability ) {
+                        try {
+                            this.addEdge( firstVertex, secondVertex, edgeTypeSupplier );
+                        } catch ( Exception ignored ) { }
                     }
-                }
             }
         }
     }
@@ -97,6 +93,22 @@ public abstract class Graph < VertexLabelType, EdgeType extends Edge < VertexLab
 
 
     @Override
+    public void removeEdge ( Vertex < VertexLabelType, EdgeType > firstEnd, EdgeType edge ) throws NonExistingEdgeException, NonExistingVertexException {
+
+        try {
+            this.checkEdgeConstraint( firstEnd, ( Vertex < VertexLabelType, EdgeType > ) edge.getEdgeEnd() );
+        } catch ( NonExistingVertexException exception ) {
+            throw exception;
+        } catch ( Exception ignored ) {}
+
+        if ( ! firstEnd.getEdgeList().contains( edge )) {
+            throw new NonExistingEdgeException( firstEnd, edge );
+        }
+
+        EdgeAdder.super.removeEdge( firstEnd, edge );
+    }
+
+    @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("Graph {\n");
         for ( Vertex < VertexLabelType, EdgeType > vertex : this.vertexList ) {
@@ -111,6 +123,13 @@ public abstract class Graph < VertexLabelType, EdgeType extends Edge < VertexLab
 class NonExistingVertexException extends Exception {
     NonExistingVertexException(Vertex vertex) {
         super("Node with label=" + vertex.getLabel() + " does not exist in the graph");
+    }
+}
+
+
+class NonExistingEdgeException extends Exception {
+    NonExistingEdgeException(Vertex vertex, Edge edge) {
+        super("Edge with firstEnd=" + vertex.getLabel() + " secondEnd=" + edge.getEdgeEnd().getLabel() + " does not exist in the graph");
     }
 }
 
