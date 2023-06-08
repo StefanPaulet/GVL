@@ -1,5 +1,6 @@
 package openjfx.graphDrawer;
 import graph.Graph;
+import graph.UndirectedGraph;
 import graph.WeighedEdge;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -18,8 +19,8 @@ public abstract class WeighedGraphDrawer < VertexLabelType extends Comparable < 
     protected void computeAllEdges () {
         super.computeAllEdges();
         for ( var entry : this.edgeShapesToEdgesMap.entrySet() ) {
-            entry.getKey().addLabel( String.valueOf(entry.getValue().getWeight()), ( ChangeListener < String > ) ( observableValue, s, t1 ) -> {
-                this.modifyEdgeLabel( entry.getKey(), s );
+            entry.getKey().addLabel( String.valueOf(entry.getValue().get(0).getWeight()), ( observableValue, oldValue, newValue ) -> {
+                this.modifyEdgeLabel( entry.getKey(), newValue );
             } );
         }
     }
@@ -50,7 +51,10 @@ public abstract class WeighedGraphDrawer < VertexLabelType extends Comparable < 
 
     public void modifyEdgeLabel ( EdgeShape edgeShape, String value ) {
         try {
-            this.edgeShapesToEdgesMap.get( edgeShape ).setWeight( Integer.parseInt( value ) );
+            var edgeList = this.edgeShapesToEdgesMap.get( edgeShape );
+            for ( var edge : edgeList ) {
+                edge.setWeight( Integer.parseInt( value ) );
+            }
         } catch ( Exception ignored ) {}
     }
 }

@@ -9,6 +9,9 @@ public class FlowNetwork < VertexLabelType extends Comparable < VertexLabelType 
     private final Vertex < VertexLabelType, EdgeType > source = new Vertex <>();
     private final Vertex < VertexLabelType, EdgeType > sink = new Vertex <>();
 
+    public FlowNetwork () {
+    }
+
     public FlowNetwork ( int nodeCount, Function < Integer, VertexLabelType > nodeLabelGenerator ) {
         super( nodeCount, nodeLabelGenerator );
         this.source.setLabel( nodeLabelGenerator.apply( nodeCount ) );

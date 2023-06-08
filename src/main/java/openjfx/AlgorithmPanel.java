@@ -2,6 +2,7 @@ package openjfx;
 
 import graph.DirectedGraph;
 import graph.UndirectedGraph;
+import graph.UndirectedWeighedGraph;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -21,6 +22,9 @@ public class AlgorithmPanel extends GridPane {
         }
         if ( graphClass.equals( DirectedGraph.class ) ) {
             algorithmArray = new String[] { "BFS", "DFS" };
+        }
+        if ( graphClass.equals( UndirectedWeighedGraph.class ) ) {
+            algorithmArray = new String[] { "MST" };
         }
 
 

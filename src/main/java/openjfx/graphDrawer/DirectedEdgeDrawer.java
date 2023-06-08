@@ -4,6 +4,9 @@ import graph.Edge;
 import graph.Vertex;
 import javafx.scene.shape.Circle;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public interface DirectedEdgeDrawer < VertexLabelType extends Comparable < VertexLabelType >, EdgeType extends Edge < VertexLabelType > >
     extends EdgeDrawer < VertexLabelType, EdgeType > {
 
@@ -23,7 +26,11 @@ public interface DirectedEdgeDrawer < VertexLabelType extends Comparable < Verte
         Circle secondCircle = graphDrawer.verticesToCirclesMap.get( secondVertex );
         EdgeType edge = graphDrawer.graph.findEdge( firstVertex, secondVertex );
         EdgeShape edgeShape = this.computeEdge( firstCircle, secondCircle );
-        graphDrawer.edgeShapesToEdgesMap.put( edgeShape, edge );
+
+        List < EdgeType > edgeTypeList = new ArrayList <>();
+        edgeTypeList.add( edge );
+
+        graphDrawer.edgeShapesToEdgesMap.put( edgeShape, edgeTypeList );
         graphDrawer.edgesToEdgeShapesMap.put( edge, edgeShape );
 
         return edge;

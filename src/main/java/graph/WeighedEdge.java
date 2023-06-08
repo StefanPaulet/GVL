@@ -1,6 +1,7 @@
 package graph;
 
-public class WeighedEdge < VertexLabelType extends Comparable < VertexLabelType > > extends Edge < VertexLabelType > {
+public class WeighedEdge < VertexLabelType extends Comparable < VertexLabelType > > extends Edge < VertexLabelType >
+    implements Comparable < Object > {
 
     private int weight;
 
@@ -19,5 +20,13 @@ public class WeighedEdge < VertexLabelType extends Comparable < VertexLabelType 
 
     public void setWeight ( int weight ) {
         this.weight = weight;
+    }
+
+    @Override
+    public int compareTo ( Object o ) {
+        if ( ! ( o instanceof WeighedEdge<?> other ) ) {
+            throw new IllegalArgumentException();
+        }
+        return Integer.compare(this.weight, other.weight);
     }
 }

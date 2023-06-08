@@ -12,6 +12,10 @@ public abstract class Graph < VertexLabelType extends Comparable < VertexLabelTy
 
     protected final List < Vertex < VertexLabelType, EdgeType > > vertexList;
 
+    public Graph () {
+        this.vertexList = new ArrayList <>();
+    }
+
     public Graph ( List < Vertex < VertexLabelType, EdgeType > > vertexList ) {
         this.vertexList = vertexList;
     }

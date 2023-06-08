@@ -13,6 +13,7 @@ import openjfx.DrawingPanel;
 import openjfx.Engine;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static openjfx.DrawingPanel.CANVAS_HEIGHT;
@@ -25,7 +26,7 @@ public abstract class GraphDrawer < VertexLabelType extends Comparable < VertexL
     protected final Engine < VertexLabelType, EdgeType > engine;
     protected Map < Circle, Vertex < VertexLabelType, EdgeType > > circlesToVerticesMap;
     protected Map < Vertex < VertexLabelType, EdgeType >, Circle > verticesToCirclesMap;
-    protected Map < EdgeShape, EdgeType > edgeShapesToEdgesMap;
+    protected Map < EdgeShape, List < EdgeType > > edgeShapesToEdgesMap;
     protected Map < EdgeType, EdgeShape > edgesToEdgeShapesMap;
     protected final Graph < VertexLabelType, EdgeType > graph;
 
@@ -96,7 +97,9 @@ public abstract class GraphDrawer < VertexLabelType extends Comparable < VertexL
 
     public void removeEdge ( EdgeShape edge ) {
         try {
-            this.graph.removeEdge( ( Vertex < VertexLabelType, EdgeType > ) this.edgeShapesToEdgesMap.get( edge ).getOwnerVertex(), this.edgeShapesToEdgesMap.get( edge ) );
+            this.graph.removeEdge(
+                ( Vertex < VertexLabelType, EdgeType > ) this.edgeShapesToEdgesMap.get( edge ).get(0).getOwnerVertex(),
+                this.edgeShapesToEdgesMap.get( edge ).get(0) );
         } catch ( Exception e ) {
             this.engine.getInfoPanel().setSystemMessage( e.getMessage() );
         }

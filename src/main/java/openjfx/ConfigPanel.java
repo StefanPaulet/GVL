@@ -28,8 +28,8 @@ public class ConfigPanel extends GridPane {
             "UndirectedGraph",
 //            "DirectedBipartiteGraph",
             "UndirectedBipartiteGraph",
-            "UndirectedWeighedGraph",
-            "DirectedWeighedGraph"
+            "UndirectedWeighedGraph"
+//            "DirectedWeighedGraph"
         )
     );
 
