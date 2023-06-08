@@ -1,7 +1,14 @@
 package openjfx.graphDrawer;
 
+import javafx.beans.value.ChangeListener;
+import javafx.event.EventHandler;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
+
+import java.util.function.UnaryOperator;
 
 import static openjfx.graphDrawer.VerticesDrawer.NODE_RADIUS;
 
@@ -49,5 +56,29 @@ public class LineShapedEdge extends EdgeShape {
     @Override
     public void deselect () {
         this.line.setStyle( "-fx-stroke: black;" );
+    }
+
+    @Override
+    public void addLabel ( String textString, ChangeListener onLabelChangeEvent ) {
+        TextField text = new TextField(textString);
+        text.relocate(
+            ( this.line.getStartX() + this.line.getEndX() ) / 2,
+            ( this.line.getStartY() + this.line.getEndY() ) / 2
+        );
+        text.setPrefWidth( 40 );
+        this.getChildren().add( text );
+
+        UnaryOperator < TextFormatter.Change> integerFilter = change -> {
+            String input = change.getControlNewText();
+            if ( input.matches("^[1-9]\\d*$|")) {
+                if ( ! input.equals( "" ) && Integer.parseInt( input ) > 99 ) {
+                    return null;
+                }
+                return change;
+            }
+            return null;
+        };
+        text.setTextFormatter(new TextFormatter<>(integerFilter));
+        text.textProperty().addListener( onLabelChangeEvent );
     }
 }

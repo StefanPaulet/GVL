@@ -14,7 +14,7 @@ import java.util.Map;
 public interface SimpleVerticesDrawer < VertexLabelType, EdgeType extends Edge < VertexLabelType >>
     extends VerticesDrawer < VertexLabelType, EdgeType > {
 
-    double MAIN_CIRCLE_RADIUS = 300.0;
+    double MAIN_CIRCLE_RADIUS = 250.0;
     double LABEL_CIRCLE_RADIUS = MAIN_CIRCLE_RADIUS + 20.0;
 
     @Override

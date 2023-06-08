@@ -1,11 +1,20 @@
 package openjfx.graphDrawer;
 
 
-import javafx.scene.Group;
+import javafx.beans.value.ChangeListener;
+import javafx.event.EventHandler;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.QuadCurve;
+import javafx.scene.text.Text;
+
+import java.util.EventListener;
+import java.util.function.UnaryOperator;
 
 import static openjfx.graphDrawer.VerticesDrawer.NODE_RADIUS;
 
@@ -31,27 +40,30 @@ public class ArrowShapedEdge extends EdgeShape {
 
         double arrowAngle = 0;
         Point controlPoint = new Point((firstEnd.getCenterX() + secondEnd.getCenterX()) / 2, (firstEnd.getCenterY() + secondEnd.getCenterY()) / 2);
-//        if ( Math.abs(firstEnd.getCenterX() - secondEnd.getCenterX()) < 1 ) {
-//            if ( firstEnd.getCenterY() < secondEnd.getCenterY() ) {
-//                controlPoint.x = firstEnd.getCenterX() - 50;
-//            } else {
-//                controlPoint.x = firstEnd.getCenterX() + 50;
-//            }
-//            controlPoint.y = ( firstEnd.getCenterY() + secondEnd.getCenterY() ) / 2;
-//        } else {
-//            if ( Math.abs(firstEnd.getCenterY() - secondEnd.getCenterY()) < 1 ) {
-//                controlPoint.x = ( firstEnd.getCenterX() + secondEnd.getCenterX() ) / 2;
-//                if ( firstEnd.getCenterY() < secondEnd.getCenterY() ) {
-//                    controlPoint.y = firstEnd.getCenterY() - 50;
-//                } else {
-//                    controlPoint.y = firstEnd.getCenterY() + 50;
-//                }
-//            } else {
-//                if ( firstEnd.getCenterY() < secondEnd.getCenterY() ) {
-//                    controlPoint.
-//                }
-//            }
-//        }
+        if ( Math.abs(firstEnd.getCenterX() - secondEnd.getCenterX()) < 2.5 ) {
+            arrowAngle = Math.PI / 10;
+            controlPoint.y = ( firstEnd.getCenterY() + secondEnd.getCenterY() ) / 2;
+            if ( firstEnd.getCenterY() < secondEnd.getCenterY() ) {
+                controlPoint.x = firstEnd.getCenterX() - 50;
+            } else {
+                controlPoint.x = firstEnd.getCenterX() + 50;
+            }
+            controlPoint.y = ( firstEnd.getCenterY() + secondEnd.getCenterY() ) / 2;
+        } else {
+            if ( Math.abs(firstEnd.getCenterY() - secondEnd.getCenterY()) < 2.5 ) {
+                arrowAngle = Math.PI / 10;
+                controlPoint.x = ( firstEnd.getCenterX() + secondEnd.getCenterX() ) / 2;
+                if ( firstEnd.getCenterX() < secondEnd.getCenterX() ) {
+                    controlPoint.y = firstEnd.getCenterY() - 50;
+                } else {
+                    controlPoint.y = firstEnd.getCenterY() + 50;
+                }
+            } else {
+                arrowAngle = -Math.PI / 10;
+                controlPoint.x = (firstEnd.getCenterX() + secondEnd.getCenterX()) / 2;
+                controlPoint.y = firstEnd.getCenterY();
+            }
+        }
 
         double angle = Math.acos (
             Math.abs ( firstEnd.getCenterX() - secondEnd.getCenterX() ) /
@@ -104,6 +116,8 @@ public class ArrowShapedEdge extends EdgeShape {
         clickableLine.setStrokeWidth( 10 );
         clickableLine.setFill( null );
         clickableLine.setOpacity( 0 );
+
+
     }
 
     @Override
@@ -118,5 +132,26 @@ public class ArrowShapedEdge extends EdgeShape {
         this.mainLine.setStyle( "-fx-stroke: black;" );
         this.firstArrow.setStyle( "-fx-stroke: black;" );
         this.secondArrow.setStyle( "-fx-stroke: black;" );
+    }
+
+    @Override
+    public void addLabel ( String textString, ChangeListener onLabelChangeEvent ) {
+        TextField text = new TextField(textString);
+        text.relocate( this.mainLine.getControlX(), this.mainLine.getControlY() );
+        text.setPrefWidth( 40 );
+        this.getChildren().add( text );
+
+        UnaryOperator < TextFormatter.Change> integerFilter = change -> {
+            String input = change.getControlNewText();
+            if ( input.matches("^[1-9]\\d*$|")) {
+                if ( ! input.equals( "" ) && Integer.parseInt( input ) > 99 ) {
+                    return null;
+                }
+                return change;
+            }
+            return null;
+        };
+        text.setTextFormatter(new TextFormatter<>(integerFilter));
+        text.textProperty().addListener( onLabelChangeEvent );
     }
 }

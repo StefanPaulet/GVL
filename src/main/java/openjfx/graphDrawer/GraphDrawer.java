@@ -1,13 +1,21 @@
 package openjfx.graphDrawer;
 
 import graph.*;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import openjfx.DrawingPanel;
 import openjfx.Engine;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static openjfx.DrawingPanel.CANVAS_HEIGHT;
+import static openjfx.DrawingPanel.CANVAS_WIDTH;
 
 public abstract class GraphDrawer < VertexLabelType, EdgeType extends Edge < VertexLabelType > >
     implements EdgeDrawer < VertexLabelType, EdgeType > ,
@@ -46,6 +54,12 @@ public abstract class GraphDrawer < VertexLabelType, EdgeType extends Edge < Ver
 
         DrawingPanel drawingPanel = this.engine.getDrawingPanel();
         drawingPanel.getChildren().clear();
+
+        var selectionRect = new Rectangle(0,0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        selectionRect.setFill( Color.WHEAT );
+        selectionRect.setOpacity( 0 );
+        drawingPanel.getChildren().add( selectionRect );
+
         drawingPanel.getChildren().addAll( circlesToVerticesMap.keySet() );
         drawingPanel.getChildren().addAll( ( edgeShapesToEdgesMap.keySet().stream().map( e -> (Node) e ).toList() ) );
     }
@@ -63,6 +77,10 @@ public abstract class GraphDrawer < VertexLabelType, EdgeType extends Edge < Ver
                 for ( var edge : vertex.getEdgeList() ) {
                     var edgeShape = this.computeEdge( this.verticesToCirclesMap.get( vertex ), this.verticesToCirclesMap.get( edge.getEdgeEnd() ) );
                     edgeShape.setOnMouseClicked( e -> engine.handleEdgeClick( edgeShape ) );
+                    try {
+                        WeighedEdge<VertexLabelType> weighedEdge = (WeighedEdge<VertexLabelType> ) edge;
+                        edgeShape.addLabel( String.valueOf( weighedEdge.getWeight() ), (observableValue, oldValue, newValue) -> this.modifyEdgeLabel( edgeShape, ( String ) newValue ) );
+                    } catch ( Exception ignored ) { ignored.printStackTrace();}
                     this.edgesToEdgeShapesMap.put( edge, edgeShape );
                     this.edgeShapesToEdgesMap.put( edgeShape, edge );
                 }
@@ -79,6 +97,11 @@ public abstract class GraphDrawer < VertexLabelType, EdgeType extends Edge < Ver
                         .orElse( null );
                     if ( edge != null ) {
                         var edgeShape = this.computeEdge( this.verticesToCirclesMap.get( firstVertex ), this.verticesToCirclesMap.get( secondVertex ) );
+
+                        try {
+                            WeighedEdge<VertexLabelType> weighedEdge = (WeighedEdge<VertexLabelType> ) edge;
+                            edgeShape.addLabel( String.valueOf( weighedEdge.getWeight() ), (observableValue, oldValue, newValue) -> this.modifyEdgeLabel( edgeShape, ( String ) newValue ) );
+                        } catch ( Exception ignored ) { ignored.printStackTrace();}
                         edgeShape.setOnMouseClicked( e -> engine.handleEdgeClick( edgeShape ) );
                         this.edgesToEdgeShapesMap.put( edge, edgeShape );
                         this.edgeShapesToEdgesMap.put( edgeShape, edge );
@@ -117,6 +140,12 @@ public abstract class GraphDrawer < VertexLabelType, EdgeType extends Edge < Ver
                     .filter( e -> e.getEdgeEnd() == secondVertex )
                     .findFirst().get();
 
+
+                try {
+                    WeighedEdge<VertexLabelType> weighedEdge = (WeighedEdge<VertexLabelType> ) edge;
+                    edgeShape.addLabel( String.valueOf( weighedEdge.getWeight() ), (observableValue, oldValue, newValue) -> this.modifyEdgeLabel( edgeShape, ( String ) newValue ) );
+                } catch ( Exception ignored ) { ignored.printStackTrace();}
+
                 this.edgesToEdgeShapesMap.put( edge, edgeShape );
                 this.edgeShapesToEdgesMap.put( edgeShape, edge );
             } else {
@@ -127,6 +156,12 @@ public abstract class GraphDrawer < VertexLabelType, EdgeType extends Edge < Ver
                     .filter( e -> e.getEdgeEnd() == firstVertex )
                     .findFirst().get();
 
+
+                try {
+                    WeighedEdge<VertexLabelType> weighedEdge = (WeighedEdge<VertexLabelType> ) firstEdge;
+                    edgeShape.addLabel( String.valueOf( weighedEdge.getWeight() ), (observableValue, oldValue, newValue) -> this.modifyEdgeLabel( edgeShape, ( String ) newValue ) );
+                } catch ( Exception ignored ) { ignored.printStackTrace();}
+
                 this.edgesToEdgeShapesMap.put( firstEdge, edgeShape );
                 this.edgesToEdgeShapesMap.put( secondEdge, edgeShape );
                 this.edgeShapesToEdgesMap.put( edgeShape, firstEdge );
@@ -136,5 +171,12 @@ public abstract class GraphDrawer < VertexLabelType, EdgeType extends Edge < Ver
         } catch ( Exception e ) {
             this.engine.getInfoPanel().setSystemMessage( e.getMessage() );
         }
+    }
+
+
+    public void modifyEdgeLabel ( EdgeShape edgeShape, String value ) {
+        try {
+            ( (WeighedEdge<Vertex>)this.edgeShapesToEdgesMap.get( edgeShape ) ).setWeight( Integer.parseInt( value ) );
+        } catch ( Exception ignored ) {}
     }
 }
