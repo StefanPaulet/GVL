@@ -1,14 +1,13 @@
 package graph;
 
-import java.util.List;
 import java.util.function.Function;
 
-public class FlowNetwork < VertexLabelType, EdgeType extends FlowNetworkEdge < VertexLabelType > >
+public class FlowNetwork < VertexLabelType extends Comparable < VertexLabelType >, EdgeType extends FlowNetworkEdge < VertexLabelType > >
     extends Graph < VertexLabelType, EdgeType >
     implements DirectedEdgeAdder < VertexLabelType, EdgeType > {
 
-    private final Vertex < VertexLabelType, EdgeType > source = new Vertex<>();
-    private final Vertex < VertexLabelType, EdgeType > sink = new Vertex<>();
+    private final Vertex < VertexLabelType, EdgeType > source = new Vertex <>();
+    private final Vertex < VertexLabelType, EdgeType > sink = new Vertex <>();
 
     public FlowNetwork ( int nodeCount, Function < Integer, VertexLabelType > nodeLabelGenerator ) {
         super( nodeCount, nodeLabelGenerator );
@@ -30,16 +29,16 @@ public class FlowNetwork < VertexLabelType, EdgeType extends FlowNetworkEdge < V
         Vertex < VertexLabelType, EdgeType > secondEnd
     ) throws NonExistingVertexException, LoopEdgeException, BipartiteEdgeAdditionException {
 
-        if ( firstEnd != this.source && firstEnd != this.sink && ! this.vertexList.contains(firstEnd) ) {
-            throw new NonExistingVertexException(firstEnd);
+        if ( firstEnd != this.source && firstEnd != this.sink && !this.vertexList.contains( firstEnd ) ) {
+            throw new NonExistingVertexException( firstEnd );
         }
 
-        if ( secondEnd != this.source && secondEnd != this.sink && ! this.vertexList.contains(secondEnd) ) {
-            throw new NonExistingVertexException(secondEnd);
+        if ( secondEnd != this.source && secondEnd != this.sink && !this.vertexList.contains( secondEnd ) ) {
+            throw new NonExistingVertexException( secondEnd );
         }
 
-        if ( firstEnd.equals(secondEnd) ) {
-            throw new LoopEdgeException(firstEnd);
+        if ( firstEnd.equals( secondEnd ) ) {
+            throw new LoopEdgeException( firstEnd );
         }
     }
 }

@@ -4,7 +4,7 @@ import graph.Edge;
 import graph.Graph;
 import openjfx.Engine;
 
-public class UndirectedGraphDrawer < VertexLabelType, EdgeType extends Edge < VertexLabelType > >
+public class UndirectedGraphDrawer < VertexLabelType extends Comparable < VertexLabelType >, EdgeType extends Edge < VertexLabelType > >
     extends GraphDrawer < VertexLabelType, EdgeType >
     implements SimpleVerticesDrawer < VertexLabelType, EdgeType >,
     UndirectedEdgeDrawer < VertexLabelType, EdgeType > {

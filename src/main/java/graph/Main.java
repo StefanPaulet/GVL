@@ -3,18 +3,18 @@ package graph;
 
 public class Main {
 
-    public static void main(String[] args) {
-        Graph < String, Edge<String> > graph = new UndirectedBipartiteGraph <> (6, String::valueOf );
+    public static void main ( String[] args ) {
+        Graph < String, Edge < String > > graph = new UndirectedBipartiteGraph <>( 6, String :: valueOf );
         try {
-            graph.addEdge( graph.vertexList.get( 0 ), graph.vertexList.get( 1 ), () -> new Edge<>() );
-            graph.addEdge( graph.vertexList.get( 0 ), graph.vertexList.get( 0 ), () -> new Edge<>() );
-            graph.addEdge( graph.vertexList.get( 2 ), graph.vertexList.get( 5 ), () -> new Edge<>() );
-            graph.addEdge( graph.vertexList.get( 4 ), graph.vertexList.get( 5 ), () -> new Edge<>() );
-            graph.addEdge( graph.vertexList.get( 0 ), graph.vertexList.get( 5 ), () -> new Edge<>() );
+            graph.addEdge( graph.vertexList.get( 0 ), graph.vertexList.get( 1 ), () -> new Edge <>() );
+            graph.addEdge( graph.vertexList.get( 0 ), graph.vertexList.get( 0 ), () -> new Edge <>() );
+            graph.addEdge( graph.vertexList.get( 2 ), graph.vertexList.get( 5 ), () -> new Edge <>() );
+            graph.addEdge( graph.vertexList.get( 4 ), graph.vertexList.get( 5 ), () -> new Edge <>() );
+            graph.addEdge( graph.vertexList.get( 0 ), graph.vertexList.get( 5 ), () -> new Edge <>() );
         } catch ( Exception e ) {
-            e.printStackTrace ();
+            e.printStackTrace();
         }
-        System.out.println(graph);
+        System.out.println( graph );
     }
 }
 

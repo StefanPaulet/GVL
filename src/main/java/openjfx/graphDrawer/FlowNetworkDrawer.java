@@ -9,7 +9,7 @@ import openjfx.Engine;
 
 import java.util.Map;
 
-public class FlowNetworkDrawer < VertexLabelType, EdgeType extends FlowNetworkEdge < VertexLabelType > >
+public class FlowNetworkDrawer < VertexLabelType extends Comparable < VertexLabelType >, EdgeType extends FlowNetworkEdge < VertexLabelType > >
     extends GraphDrawer < VertexLabelType, EdgeType >
     implements DirectedEdgeDrawer < VertexLabelType, EdgeType >,
     SimpleVerticesDrawer < VertexLabelType, EdgeType > {
@@ -25,11 +25,11 @@ public class FlowNetworkDrawer < VertexLabelType, EdgeType extends FlowNetworkEd
 
     @Override
     public Map < Circle, Vertex < VertexLabelType, EdgeType > > computeGraphPoints ( Graph < VertexLabelType, EdgeType > graph ) {
-        if ( ! ( graph instanceof FlowNetwork < VertexLabelType, EdgeType > flowNetwork ) ) {
+        if ( !( graph instanceof FlowNetwork < VertexLabelType, EdgeType > flowNetwork ) ) {
             return null;
         }
         var resultMap = SimpleVerticesDrawer.super.computeGraphPoints( graph );
-        resultMap.put( new Circle( SOURCE_X, SOURCE_Y, NODE_RADIUS ), flowNetwork.getSource());
+        resultMap.put( new Circle( SOURCE_X, SOURCE_Y, NODE_RADIUS ), flowNetwork.getSource() );
         resultMap.put( new Circle( SINK_X, SINK_Y, NODE_RADIUS ), flowNetwork.getSink() );
 
         return resultMap;

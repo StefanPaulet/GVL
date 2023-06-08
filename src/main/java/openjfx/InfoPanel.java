@@ -1,8 +1,6 @@
 package openjfx;
 
-import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -11,7 +9,7 @@ public class InfoPanel extends VBox {
     private Text systemMessage = new Text();
     private Text algorithmMessage = new Text();
 
-    public InfoPanel() {
+    public InfoPanel () {
         super();
 
         this.setSpacing( 200.0 );
@@ -23,11 +21,11 @@ public class InfoPanel extends VBox {
         this.getChildren().addAll( systemMessage, algorithmMessage );
     }
 
-    public void setSystemMessage( String message ) {
+    public void setSystemMessage ( String message ) {
         this.systemMessage.textProperty().set( message );
     }
 
-    public void setAlgorithmMessage( String message ) {
+    public void setAlgorithmMessage ( String message ) {
         this.algorithmMessage.textProperty().set( message );
     }
 }

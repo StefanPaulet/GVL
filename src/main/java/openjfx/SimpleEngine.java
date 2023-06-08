@@ -5,7 +5,6 @@ import graph.Edge;
 import java.util.function.Supplier;
 
 public class SimpleEngine extends Engine < Integer, Edge < Integer > > {
-
     public SimpleEngine ( DrawingPanel drawingPanel, InfoPanel infoPanel ) {
         super( drawingPanel, infoPanel );
     }
@@ -13,5 +12,10 @@ public class SimpleEngine extends Engine < Integer, Edge < Integer > > {
     @Override
     public Supplier < Edge < Integer > > edgeSupplier () {
         return Edge :: new;
+    }
+
+    @Override
+    protected String getGraphDrawerType () {
+        return "";
     }
 }

@@ -1,17 +1,22 @@
 package openjfx.graphDrawer;
 
 import graph.Edge;
-import javafx.event.EventHandler;
+import graph.Vertex;
 import javafx.scene.shape.Circle;
-import openjfx.DrawingPanel;
 
-public interface EdgeDrawer < VertexLabelType, EdgeType extends Edge< VertexLabelType > > {
-	default EdgeShape computeEdge(
-		Circle firstEnd,
-		Circle secondEnd
-	) { return this.computeEdgeDirectly(firstEnd, secondEnd); }
+public interface EdgeDrawer < VertexLabelType extends Comparable < VertexLabelType >, EdgeType extends Edge < VertexLabelType > > {
+    default EdgeShape computeEdge (
+        Circle firstEnd,
+        Circle secondEnd
+    ) {
+        return this.computeEdgeDirectly( firstEnd, secondEnd );
+    }
 
-	EdgeShape computeEdgeDirectly(Circle firstEnd, Circle secondEnd);
+    EdgeShape computeEdgeDirectly ( Circle firstEnd, Circle secondEnd );
 
-
+    EdgeType mapEdge (
+        GraphDrawer < VertexLabelType, EdgeType > graphDrawer,
+        Vertex < VertexLabelType, EdgeType > firstCircle,
+        Vertex < VertexLabelType, EdgeType > secondCircle
+    );
 }

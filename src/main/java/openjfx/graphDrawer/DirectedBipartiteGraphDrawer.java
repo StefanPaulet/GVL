@@ -5,7 +5,7 @@ import graph.Graph;
 import javafx.scene.shape.Circle;
 import openjfx.Engine;
 
-public class DirectedBipartiteGraphDrawer < VertexLabelType, EdgeType extends Edge < VertexLabelType > >
+public class DirectedBipartiteGraphDrawer < VertexLabelType extends Comparable < VertexLabelType >, EdgeType extends Edge < VertexLabelType > >
     extends GraphDrawer < VertexLabelType, EdgeType >
     implements BipartiteVerticesDrawer < VertexLabelType, EdgeType >,
     DirectedEdgeDrawer < VertexLabelType, EdgeType > {

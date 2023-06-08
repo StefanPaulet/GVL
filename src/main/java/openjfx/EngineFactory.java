@@ -10,11 +10,11 @@ public class EngineFactory {
         DrawingPanel drawingPanel,
         InfoPanel infoPanel
     ) {
-        if ( (Object)edgeClass == Edge.class ) {
-            return ( Engine < Integer, EdgeType > ) new SimpleEngine(drawingPanel, infoPanel);
+        if ( ( Object ) edgeClass == Edge.class ) {
+            return ( Engine < Integer, EdgeType > ) new SimpleEngine( drawingPanel, infoPanel );
         }
-        if ( (Object)edgeClass == WeighedEdge.class ) {
-            return ( Engine < Integer, EdgeType > ) new WeighedEngine(drawingPanel, infoPanel);
+        if ( ( Object ) edgeClass == WeighedEdge.class ) {
+            return ( Engine < Integer, EdgeType > ) new WeighedEngine( drawingPanel, infoPanel );
         }
         return null;
     }

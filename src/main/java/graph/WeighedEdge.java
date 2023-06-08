@@ -1,6 +1,6 @@
 package graph;
 
-public class WeighedEdge < VertexLabelType > extends Edge < VertexLabelType > {
+public class WeighedEdge < VertexLabelType extends Comparable < VertexLabelType > > extends Edge < VertexLabelType > {
 
     private int weight;
 

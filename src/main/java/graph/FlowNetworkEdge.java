@@ -1,6 +1,6 @@
 package graph;
 
-public class FlowNetworkEdge < VertexLabelType >
+public class FlowNetworkEdge < VertexLabelType extends Comparable < VertexLabelType > >
     extends Edge < VertexLabelType > {
 
     private int capacity;

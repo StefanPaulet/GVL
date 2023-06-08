@@ -1,20 +1,11 @@
 package openjfx.graphDrawer;
 
 
-import javafx.beans.value.ChangeListener;
-import javafx.event.EventHandler;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.QuadCurve;
-import javafx.scene.text.Text;
-
-import java.util.EventListener;
-import java.util.function.UnaryOperator;
 
 import static openjfx.graphDrawer.VerticesDrawer.NODE_RADIUS;
 
@@ -28,19 +19,19 @@ public class ArrowShapedEdge extends EdgeShape {
     double ARROW_ANGLE = Math.PI / 9;
 
     public ArrowShapedEdge ( Circle firstEnd, Circle secondEnd ) {
-        this ( firstEnd, secondEnd, new QuadCurve(), new Line(), new Line(), new QuadCurve() );
+        this( firstEnd, secondEnd, new QuadCurve(), new Line(), new Line(), new QuadCurve() );
     }
 
     private ArrowShapedEdge ( Circle firstEnd, Circle secondEnd, QuadCurve line, Line arrow1, Line arrow2, QuadCurve clickableLine ) {
-        super ( line, arrow1, arrow2, clickableLine );
+        super( line, arrow1, arrow2, clickableLine );
         this.mainLine = line;
         this.firstArrow = arrow1;
         this.secondArrow = arrow2;
 
 
         double arrowAngle = 0;
-        Point controlPoint = new Point((firstEnd.getCenterX() + secondEnd.getCenterX()) / 2, (firstEnd.getCenterY() + secondEnd.getCenterY()) / 2);
-        if ( Math.abs(firstEnd.getCenterX() - secondEnd.getCenterX()) < 2.5 ) {
+        Point controlPoint = new Point( ( firstEnd.getCenterX() + secondEnd.getCenterX() ) / 2, ( firstEnd.getCenterY() + secondEnd.getCenterY() ) / 2 );
+        if ( Math.abs( firstEnd.getCenterX() - secondEnd.getCenterX() ) < 2.5 ) {
             arrowAngle = Math.PI / 10;
             controlPoint.y = ( firstEnd.getCenterY() + secondEnd.getCenterY() ) / 2;
             if ( firstEnd.getCenterY() < secondEnd.getCenterY() ) {
@@ -50,7 +41,7 @@ public class ArrowShapedEdge extends EdgeShape {
             }
             controlPoint.y = ( firstEnd.getCenterY() + secondEnd.getCenterY() ) / 2;
         } else {
-            if ( Math.abs(firstEnd.getCenterY() - secondEnd.getCenterY()) < 2.5 ) {
+            if ( Math.abs( firstEnd.getCenterY() - secondEnd.getCenterY() ) < 2.5 ) {
                 arrowAngle = Math.PI / 10;
                 controlPoint.x = ( firstEnd.getCenterX() + secondEnd.getCenterX() ) / 2;
                 if ( firstEnd.getCenterX() < secondEnd.getCenterX() ) {
@@ -60,31 +51,31 @@ public class ArrowShapedEdge extends EdgeShape {
                 }
             } else {
                 arrowAngle = -Math.PI / 10;
-                controlPoint.x = (firstEnd.getCenterX() + secondEnd.getCenterX()) / 2;
+                controlPoint.x = ( firstEnd.getCenterX() + secondEnd.getCenterX() ) / 2;
                 controlPoint.y = firstEnd.getCenterY();
             }
         }
 
-        double angle = Math.acos (
-            Math.abs ( firstEnd.getCenterX() - secondEnd.getCenterX() ) /
-                Math.sqrt (
-                    Math.pow ( firstEnd.getCenterX() - secondEnd.getCenterX(), 2 ) +
-                        Math.pow ( firstEnd.getCenterY() - secondEnd.getCenterY(), 2 )
+        double angle = Math.acos(
+            Math.abs( firstEnd.getCenterX() - secondEnd.getCenterX() ) /
+                Math.sqrt(
+                    Math.pow( firstEnd.getCenterX() - secondEnd.getCenterX(), 2 ) +
+                        Math.pow( firstEnd.getCenterY() - secondEnd.getCenterY(), 2 )
                 )
         );
 
         double xDirection = firstEnd.getCenterX() < secondEnd.getCenterX() ? -1.0 : 1.0;
         double yDirection = firstEnd.getCenterY() < secondEnd.getCenterY() ? -1.0 : 1.0;
 
-        Point edgeArrowStart = new Point (
-            firstEnd.getCenterX() - NODE_RADIUS * Math.cos ( angle ) * xDirection,
-            firstEnd.getCenterY() - NODE_RADIUS * Math.sin ( angle ) * yDirection
+        Point edgeArrowStart = new Point(
+            firstEnd.getCenterX() - NODE_RADIUS * Math.cos( angle ) * xDirection,
+            firstEnd.getCenterY() - NODE_RADIUS * Math.sin( angle ) * yDirection
         );
-        Point edgeArrowEnd = new Point (
-            secondEnd.getCenterX() + NODE_RADIUS * Math.cos ( angle ) * xDirection,
-            secondEnd.getCenterY() + NODE_RADIUS * Math.sin ( angle ) * yDirection
+        Point edgeArrowEnd = new Point(
+            secondEnd.getCenterX() + NODE_RADIUS * Math.cos( angle ) * xDirection,
+            secondEnd.getCenterY() + NODE_RADIUS * Math.sin( angle ) * yDirection
         );
-        
+
         line.setStartX( edgeArrowStart.x );
         line.setStartY( edgeArrowStart.y );
         line.setEndX( edgeArrowEnd.x );
@@ -98,13 +89,13 @@ public class ArrowShapedEdge extends EdgeShape {
 
         arrow1.setStartX( edgeArrowEnd.x );
         arrow1.setStartY( edgeArrowEnd.y );
-        arrow1.setEndX( edgeArrowEnd.x + ARROW_LENGTH * Math.cos ( angle - ARROW_ANGLE - arrowAngle ) * xDirection );
-        arrow1.setEndY( edgeArrowEnd.y + ARROW_LENGTH * Math.sin ( angle - ARROW_ANGLE - arrowAngle ) * yDirection );
+        arrow1.setEndX( edgeArrowEnd.x + ARROW_LENGTH * Math.cos( angle - ARROW_ANGLE - arrowAngle ) * xDirection );
+        arrow1.setEndY( edgeArrowEnd.y + ARROW_LENGTH * Math.sin( angle - ARROW_ANGLE - arrowAngle ) * yDirection );
 
-        arrow2.setStartX(edgeArrowEnd.x );
-        arrow2.setStartY(edgeArrowEnd.y );
-        arrow2.setEndX(edgeArrowEnd.x + ARROW_LENGTH * Math.cos ( angle + ARROW_ANGLE - arrowAngle ) * xDirection );
-        arrow2.setEndY(edgeArrowEnd.y + ARROW_LENGTH * Math.sin ( angle + ARROW_ANGLE - arrowAngle ) * yDirection );
+        arrow2.setStartX( edgeArrowEnd.x );
+        arrow2.setStartY( edgeArrowEnd.y );
+        arrow2.setEndX( edgeArrowEnd.x + ARROW_LENGTH * Math.cos( angle + ARROW_ANGLE - arrowAngle ) * xDirection );
+        arrow2.setEndY( edgeArrowEnd.y + ARROW_LENGTH * Math.sin( angle + ARROW_ANGLE - arrowAngle ) * yDirection );
 
         clickableLine.setStartX( line.getStartX() );
         clickableLine.setStartY( line.getStartY() );
@@ -121,10 +112,10 @@ public class ArrowShapedEdge extends EdgeShape {
     }
 
     @Override
-    public void select () {
-        this.mainLine.setStyle( "-fx-stroke: red;" );
-        this.firstArrow.setStyle( "-fx-stroke: red;" );
-        this.secondArrow.setStyle( "-fx-stroke: red;" );
+    public void select ( String color ) {
+        this.mainLine.setStyle( "-fx-stroke: " + color + ";" );
+        this.firstArrow.setStyle( "-fx-stroke: " + color + ";" );
+        this.secondArrow.setStyle( "-fx-stroke: " + color + ";" );
     }
 
     @Override
@@ -135,23 +126,15 @@ public class ArrowShapedEdge extends EdgeShape {
     }
 
     @Override
-    public void addLabel ( String textString, ChangeListener onLabelChangeEvent ) {
-        TextField text = new TextField(textString);
-        text.relocate( this.mainLine.getControlX(), this.mainLine.getControlY() );
-        text.setPrefWidth( 40 );
-        this.getChildren().add( text );
+    protected Point getLabelPoint () {
+        return new Point(
+            this.mainLine.getControlX(),
+            this.mainLine.getControlY()
+        );
+    }
 
-        UnaryOperator < TextFormatter.Change> integerFilter = change -> {
-            String input = change.getControlNewText();
-            if ( input.matches("^[1-9]\\d*$|")) {
-                if ( ! input.equals( "" ) && Integer.parseInt( input ) > 99 ) {
-                    return null;
-                }
-                return change;
-            }
-            return null;
-        };
-        text.setTextFormatter(new TextFormatter<>(integerFilter));
-        text.textProperty().addListener( onLabelChangeEvent );
+    @Override
+    public String getColor () {
+        return this.mainLine.getStyle();
     }
 }

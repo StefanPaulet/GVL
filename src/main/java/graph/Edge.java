@@ -2,13 +2,13 @@ package graph;
 
 import java.util.Objects;
 
-public class Edge < VertexLabelType > {
+public class Edge < VertexLabelType extends Comparable < VertexLabelType > > {
 
     private Vertex < VertexLabelType, Edge < VertexLabelType > > edgeEnd;
     private Vertex < VertexLabelType, Edge < VertexLabelType > > ownerVertex;
 
 
-    public Edge ( ) {
+    public Edge () {
     }
 
     public Edge ( Vertex < VertexLabelType, Edge < VertexLabelType > > edgeEnd ) {
@@ -32,10 +32,10 @@ public class Edge < VertexLabelType > {
     }
 
     @Override
-    public String toString() {
+    public String toString () {
         return "Edge { " +
-                "edgeEnd=" + (edgeEnd == null ? "" : edgeEnd.getLabel()) +
-                " }";
+            "edgeEnd=" + ( edgeEnd == null ? "" : edgeEnd.getLabel() ) +
+            " }";
     }
 
     @Override
