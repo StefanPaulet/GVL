@@ -35,7 +35,7 @@ public class DFS < VertexLabelType extends Comparable < VertexLabelType >, EdgeT
         this.engine.selectVertex( startVertex );
         this.displayMessage( "We start the exploration from vertex " + startVertex.getLabel() );
 
-        while ( ! vertexStack.isEmpty() ) {
+        while ( ! vertexStack.isEmpty() && ! stopped ) {
             Vertex < VertexLabelType, EdgeType > currentVertex = vertexStack.peek();
 
             this.displayMessage( "We leave vertex " + currentVertex.getLabel() + " and explore his unvisited neighbours" );
@@ -76,7 +76,9 @@ public class DFS < VertexLabelType extends Comparable < VertexLabelType >, EdgeT
             }
         }
 
-        this.displayMessage( "We have finished the DFS exploration" );
-        visitedEdges.keySet().forEach( this.engine::markFinalEdge );
+        if ( ! stopped ) {
+            this.displayMessage( "We have finished the DFS exploration" );
+            visitedEdges.keySet().forEach( this.engine :: markFinalEdge );
+        }
     }
 }

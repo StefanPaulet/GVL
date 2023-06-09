@@ -38,7 +38,7 @@ public class BFS < VertexLabelType extends Comparable < VertexLabelType >, EdgeT
         this.engine.selectVertex( startVertex );
         this.displayMessage( "We start the exploration from vertex " + startVertex.getLabel() );
 
-        while ( ! vertexQueue.isEmpty() ) {
+        while ( ! vertexQueue.isEmpty() && ! stopped ) {
             Vertex < VertexLabelType, EdgeType > currentVertex = vertexQueue.remove();
 
             this.engine.markFinalVertex( currentVertex );
@@ -69,7 +69,9 @@ public class BFS < VertexLabelType extends Comparable < VertexLabelType >, EdgeT
             }
         }
 
-        this.displayMessage( "We have finished the BFS exploration" );
-        visitedEdges.keySet().forEach( this.engine::markFinalEdge );
+        if ( ! stopped ) {
+            this.displayMessage( "We have finished the BFS exploration" );
+            visitedEdges.keySet().forEach( this.engine :: markFinalEdge );
+        }
     }
 }

@@ -179,8 +179,7 @@ public abstract class Engine < VertexLabelType extends Comparable < VertexLabelT
     public void loadNewAlgorithm ( String algorithmName ) {
         try {
             this.graphDrawer.draw();
-            this.state.algorithmThread = null;
-            this.state.algorithmRunning = false;
+            this.stopRunningAlgorithm();
 
             Class < Algorithm < VertexLabelType, EdgeType > > algorithmClass = ( Class < Algorithm < VertexLabelType, EdgeType > > ) Class.forName( "algorithm." + algorithmName );
             var algorithmConstructor = algorithmClass.getConstructor(Engine.class);
@@ -194,6 +193,15 @@ public abstract class Engine < VertexLabelType extends Comparable < VertexLabelT
             this.algorithmPanel.addInputBoxes( this.state.algorithmLoader.getNecessaryFields() );
         } catch ( Exception e ) {
             this.infoPanel.setSystemMessage( "You must select a valid algorithm" );
+        }
+    }
+
+    public void stopRunningAlgorithm () {
+        if ( this.state.algorithmThread != null ) {
+            try { this.state.algorithm.pauseLock.unlock(); } catch ( Exception ignored ) {}
+            this.state.algorithm.stopped = true;
+            this.state.algorithmThread = null;
+            this.state.algorithmRunning = false;
         }
     }
 
@@ -261,5 +269,10 @@ public abstract class Engine < VertexLabelType extends Comparable < VertexLabelT
 
     public void updateAlgorithmDelay ( double value ) {
         this.state.algorithm.setDelayMillis( (int) (value) );
+    }
+
+
+    public EngineState getState () {
+        return state;
     }
 }

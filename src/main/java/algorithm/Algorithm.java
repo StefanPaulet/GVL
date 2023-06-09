@@ -9,6 +9,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public abstract class Algorithm < VertexLabelType extends Comparable < VertexLabelType >, EdgeType extends Edge < VertexLabelType > >
     implements Runnable {
 
+    public volatile boolean stopped = false;
     public Lock pauseLock = new ReentrantLock();
 
     protected final Engine < VertexLabelType, EdgeType > engine;
@@ -26,6 +27,9 @@ public abstract class Algorithm < VertexLabelType extends Comparable < VertexLab
         } catch ( Exception e ) {
             this.pauseLock.lock();
             this.pauseLock.unlock();
+        }
+        if ( this.stopped ) {
+            this.setDelayMillis( 0 );
         }
     }
 

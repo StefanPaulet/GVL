@@ -92,6 +92,9 @@ public class ConfigPanel extends GridPane {
 
     private void generateNewGraph () {
 
+        if ( this.engine != null ) {
+            this.engine.stopRunningAlgorithm();
+        }
         String engineTypeString = this.graphTypeDropdown.getValue().contains( "Weighed" ) ? "WeighedEdge" : "Edge";
         instantiateEngine( engineTypeString );
 

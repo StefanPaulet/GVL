@@ -46,7 +46,7 @@ public class MST < VertexLabelType extends Comparable < VertexLabelType >, EdgeT
             }
         }
 
-        while ( vertexList.size() != this.engine.getGraph().getConstVertexList().size() ) {
+        while ( vertexList.size() != this.engine.getGraph().getConstVertexList().size() && ! stopped ) {
 
             if ( costMap.isEmpty() ) {
                 break;
